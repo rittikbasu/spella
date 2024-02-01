@@ -44,7 +44,7 @@
   background: #c62828; /* A deeper red for a vintage look */
   color: #ffffff; /* White text for contrast */
   border: 1px solid #c62828; /* Slightly darker border for definition */
-  text-shadow: 0 1px 0 #ffcccc; /* Adjusted text shadow for a subtle effect */
+  text-shadow: 0 0.3px 0 #ffcccc; /* Adjusted text shadow for a subtle effect */
   box-shadow: 
     0 2px 4px rgba(0, 0, 0, 0.2), /* Subtle shadow for depth */
     inset 0 1px rgba(231, 174, 174, 0.3), /* Subtle inner glow for a slight 3D effect */
