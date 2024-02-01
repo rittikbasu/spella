@@ -36,7 +36,7 @@ function Home() {
   }, []);
 
   return (
-    <div className="max-w-lg mx-auto md:py-8 px-2 py-4 h-dvh flex flex-col justify-between">
+    <div className="max-w-lg mx-auto md:py-8 px-2 py-4 h-dvh w-dvw flex flex-col justify-between">
       <div className="w-full max-w-lg mx-auto mb-4 pl-2 md:px-2 flex justify-between items-center">
         <span className="text-3xl text-left font-bold tracking-widest bg-clip-text text-transparent bg-gradient-to-b from-amber-200 to-amber-500">
           spella
