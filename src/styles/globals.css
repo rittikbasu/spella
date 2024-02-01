@@ -16,7 +16,7 @@
   }
 }
 
-body {
+/* body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
       to bottom,
@@ -24,10 +24,63 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
-}
+} */
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+.simple-keyboard {
+  max-width: 850px;
+}
+
+.simple-keyboard.hg-theme-default {
+  background: transparent;
+}
+
+.simple-keyboard.hg-layout-default .hg-button.hg-red {
+  background: #c62828; /* A deeper red for a vintage look */
+  color: #ffffff; /* White text for contrast */
+  border: 1px solid #c62828; /* Slightly darker border for definition */
+  text-shadow: 0 1px 0 #ffcccc; /* Adjusted text shadow for a subtle effect */
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.2), /* Subtle shadow for depth */
+    inset 0 1px rgba(231, 174, 174, 0.3), /* Subtle inner glow for a slight 3D effect */
+    inset 0 -3px 1px rgba(0,0,0,0.1); /* Inner shadow for depth */
+    
+}
+
+.simple-keyboard.hg-layout-default .hg-button {
+  background-color: #f0f0f0; /* Light grey, common in old keyboards */
+  border: 1px solid #ccc; /* Slightly darker border for definition */
+  box-shadow: 
+    0 4px #8a8a8a, /* Bottom shadow for depth */
+    inset 0 1px #fff, /* Top inner highlight for a glossy effect */
+    inset 0 -3px 2px rgba(0,0,0,0.1); /* Inner shadow for depth */
+  color: #333; /* Dark text for contrast */
+  font-family: 'Courier New', Courier, monospace;
+  text-shadow: 0 1px 0 #fff; /* Text shadow for a slight 3D effect */
+  transition: all 0.2s ease; /* Smooth transition for the press effect */
+}
+
+.simple-keyboard.hg-layout-default .hg-button:active {
+  box-shadow: 
+    0 2px #666, /* Reduce shadow size for press effect */
+    inset 0 1px 2px rgba(0,0,0,0.1); /* Adjust inner shadow for pressed look */
+  transform: translateY(2px); /* Move down to simulate press */
+}
+
+.old-keyboard-style {
+  background-image: linear-gradient(to bottom, #d3d3d3, #8c8c8c);
+  background-blend-mode: multiply;
+  color: #333; /* Adjust text color as needed */
+
+    /* Adding 3D border effect */
+    box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.2), /* Outer shadow for depth */
+    0 6px 20px rgba(0, 0, 0, 0.19), /* Additional layer of shadow for more depth */
+    inset 0px 0px 8px rgba(255, 255, 255, 0.5), /* Inner white shadow for the 3D effect */
+    inset 0 -3px 8px rgba(0, 0, 0, 0.5); /* Inner dark shadow to enhance 3D effect */
 }

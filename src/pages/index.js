@@ -1,118 +1,113 @@
-import Image from "next/image";
-import { Inter } from "next/font/google";
+import { useState, useEffect } from "react";
+import Keyboard from "react-simple-keyboard";
+import "react-simple-keyboard/build/css/index.css";
+import { FaPlay } from "react-icons/fa";
 
-const inter = Inter({ subsets: ["latin"] });
+function Home() {
+  let keyboard;
+  const [input, setInput] = useState("");
+  const onChange = (newInput) => {
+    setInput(newInput);
+  };
 
-export default function Home() {
+  const onKeyPress = (button) => {
+    console.log("Button pressed", button);
+  };
+
+  const logKey = (e) => {
+    let key = e.key;
+    if (key === "Backspace") {
+      setInput((prev) => prev.slice(0, -1));
+    } else if (/^[a-zA-Z]$/.test(key)) {
+      setInput((prev) => {
+        if (prev.length >= 50) return prev;
+        return prev + key.toLowerCase();
+      });
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("keydown", logKey);
+
+    return () => {
+      window.removeEventListener("keydown", logKey);
+    };
+  }, []);
+
   return (
-    <main
-      className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
-    >
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/pages/index.js</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <div className="max-w-lg mx-auto md:py-8 px-2 py-4 h-screen flex flex-col justify-between">
+      <div className="w-full max-w-lg mx-auto mb-4 pl-2 md:px-2 flex justify-between items-center">
+        <span className="text-3xl text-left font-bold tracking-widest bg-clip-text text-transparent bg-gradient-to-b from-amber-200 to-amber-500">
+          spella
+        </span>
+        <span className="text-lg bg-blue-100 rounded-xl font-mono text-black py-1 px-4">
+          daily challenge
+        </span>
+      </div>
+
+      <div className="flex items-center justify-center">
+        <button
+          className=" bg-white outline group outline-gray-600 hover:bg-blue-500 text-white font-bold p-8 rounded-full"
+          // onClick={handleButtonClick}
+        >
+          <FaPlay className="text-4xl text-black group-hover:text-white" />
+        </button>
+      </div>
+
+      <div className="flex flex-col justify-center items-center w-full">
+        <div className="border-2 border-yellow-300 min-w-72 text-center rounded-xl mb-4 p-2 bg-white break-all">
+          {input === "" ? (
+            <span className="text-2xl tracking-wider text-zinc-400">
+              let&rsquo;s get typing
+            </span>
+          ) : (
+            <span className="text-2xl">{input}</span>
+          )}
         </div>
       </div>
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-full sm:before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full sm:after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700/10 after:dark:from-sky-900 after:dark:via-[#0141ff]/40 before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
+      <div className="w-full md:max-w-lg px-1">
+        <button
+          // onClick={handleSubmit}
+          className="md:block hidden mx-auto bg-amber-400 text-white px-8 py-2 my-8 rounded-xl mt-4"
+        >
+          Submit →
+        </button>
+        <div className="rounded-xl overflow-hidden py-2 md:px-2 old-keyboard-style">
+          <Keyboard
+            keyboardRef={(r) => (keyboard = r)}
+            onChange={(newInput) => onChange(newInput)}
+            onKeyPress={(button) => onKeyPress(button)}
+            maxLength={50}
+            theme={"hg-theme-default hg-layout-default my-theme"}
+            layout={{
+              default: [
+                "q w e r t y u i o p",
+                "a s d f g h j k l",
+                "z x c v b n m {bksp}",
+              ],
+            }}
+            buttonTheme={[
+              {
+                class: "text-red-500 hg-red",
+                buttons: "{bksp}",
+              },
+              {
+                class: "text-amber-500",
+                buttons: "s p e l l a",
+              },
+            ]}
+          />
+        </div>
+        <button
+          // onClick={handleSubmit}
+          className="mx-auto md:hidden block bg-amber-400 text-white px-8 py-2 rounded-xl mt-4"
+        >
+          Submit →
+        </button>
       </div>
-
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Discover and deploy boilerplate example Next.js&nbsp;projects.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50 text-balance`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+    </div>
   );
 }
+
+export default Home;
