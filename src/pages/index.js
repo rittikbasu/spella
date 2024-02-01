@@ -40,7 +40,10 @@ function Home() {
     <>
       <Head>
         <title>spella - daily challenge</title>
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta
+          name="viewport"
+          content="initial-scale=1.0, width=device-width, maximum-scale=1.0, user-scalable=no"
+        />
       </Head>
       <div className="max-w-lg mx-auto md:py-8 px-2 py-4 h-dvh w-dvw flex flex-col justify-between">
         <div className="w-full max-w-lg mx-auto mb-4 pl-2 md:px-2 flex justify-between items-center">
