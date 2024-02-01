@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Keyboard from "react-simple-keyboard";
 import "react-simple-keyboard/build/css/index.css";
 import { FaPlay } from "react-icons/fa";
+import { FaArrowRightLong } from "react-icons/fa6";
 
 function Home() {
   let keyboard;
@@ -47,10 +48,10 @@ function Home() {
 
       <div className="flex items-center justify-center">
         <button
-          className=" bg-white outline group outline-gray-600 hover:bg-blue-500 text-white font-bold p-8 rounded-full"
+          className="bg-gradient-to-bl from-yellow-400 to-amber-500 group text-white font-bold p-8 rounded-full"
           // onClick={handleButtonClick}
         >
-          <FaPlay className="text-4xl text-black group-hover:text-white" />
+          <FaPlay className="text-4xl text-black/70 group-hover:text-white" />
         </button>
       </div>
 
@@ -69,9 +70,9 @@ function Home() {
       <div className="w-full md:max-w-lg px-1">
         <button
           // onClick={handleSubmit}
-          className="md:block hidden mx-auto bg-amber-400 text-white px-8 py-2 my-8 rounded-xl mt-4"
+          className="md:flex items-center hidden mx-auto shadow-lg bg-gradient-to-bl from-yellow-400 to-amber-500 text-white px-8 py-2 my-8 rounded-xl mt-4"
         >
-          Submit →
+          Submit <FaArrowRightLong className="ml-2" />
         </button>
         <div className="rounded-xl overflow-hidden py-2 md:px-2 old-keyboard-style">
           <Keyboard
@@ -101,9 +102,10 @@ function Home() {
         </div>
         <button
           // onClick={handleSubmit}
-          className="mx-auto md:hidden block bg-amber-400 text-white px-8 py-2 rounded-xl mt-4"
+          className="mx-auto md:hidden bg-gradient-to-bl shadow-lg from-yellow-400 to-amber-500 text-white px-8 py-2 rounded-xl mt-4 flex items-center"
         >
-          Submit →
+          Submit
+          <FaArrowRightLong className="ml-2" />
         </button>
       </div>
     </div>
