@@ -3,11 +3,16 @@ import Head from "next/head";
 import Keyboard from "react-simple-keyboard";
 import "react-simple-keyboard/build/css/index.css";
 import { FaPlay } from "react-icons/fa";
-import { FaArrowRightLong } from "react-icons/fa6";
+import { FaArrowRightLong, FaPause } from "react-icons/fa6";
+
+import Header from "@/components/Header";
 
 function Home() {
   let keyboard;
   const [input, setInput] = useState("");
+  const [audio, setAudio] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+
   const onChange = (newInput) => {
     setInput(newInput);
   };
@@ -16,23 +21,39 @@ function Home() {
     console.log("Button pressed", button);
   };
 
-  const logKey = (e) => {
+  const handleKeyPress = (e) => {
     let key = e.key;
     if (key === "Backspace") {
       setInput((prev) => prev.slice(0, -1));
     } else if (/^[a-zA-Z]$/.test(key)) {
       setInput((prev) => {
-        if (prev.length >= 50) return prev;
+        if (prev.length >= 45) return prev;
         return prev + key.toLowerCase();
       });
     }
   };
 
+  const playAudio = () => {
+    if (isPlaying) {
+      audio.pause();
+      audio.currentTime = 0;
+    } else {
+      audio.play();
+    }
+    setIsPlaying(!isPlaying);
+  };
+
   useEffect(() => {
-    window.addEventListener("keydown", logKey);
+    window.addEventListener("keydown", handleKeyPress);
+    const audioInstance = new Audio("/audio/musician_audio.ogg");
+    setAudio(audioInstance);
+
+    const handleAudioEnd = () => setIsPlaying(false);
+    audioInstance.addEventListener("ended", handleAudioEnd);
 
     return () => {
-      window.removeEventListener("keydown", logKey);
+      window.removeEventListener("keydown", handleKeyPress);
+      audioInstance.removeEventListener("ended", handleAudioEnd);
     };
   }, []);
 
@@ -45,33 +66,30 @@ function Home() {
           content="initial-scale=1.0, width=device-width, maximum-scale=1.0, user-scalable=no"
         />
       </Head>
-      <div className="max-w-lg mx-auto md:py-8 px-2 py-4 h-dvh w-dvw flex flex-col justify-between">
-        <div className="w-full max-w-lg mx-auto mb-4 pl-2 md:px-2 flex justify-between items-center">
-          <span className="text-3xl text-left font-bold tracking-widest bg-clip-text text-transparent bg-gradient-to-b from-amber-200 to-amber-500">
-            spella
-          </span>
-          <span className="text-lg bg-blue-100 rounded-xl font-mono text-black py-1 px-4">
-            daily challenge
-          </span>
-        </div>
+      <div className="max-w-lg md:py-8 px-2 py-4 h-dvh w-dvw flex flex-col justify-between mx-auto">
+        <Header />
 
         <div className="flex items-center justify-center">
           <button
-            className="bg-gradient-to-bl from-yellow-400 to-amber-500 group text-white font-bold p-8 rounded-full"
-            // onClick={handleButtonClick}
+            className="bg-gradient-to-bl from-yellow-400 to-amber-500 group outline-none text-white font-bold p-8 rounded-full"
+            onClick={playAudio}
           >
-            <FaPlay className="text-4xl text-black/70 group-hover:text-white" />
+            {isPlaying ? (
+              <FaPause className="text-4xl text-black/70 group-hover:text-white" />
+            ) : (
+              <FaPlay className="text-4xl text-black/70 group-hover:text-white" />
+            )}
           </button>
         </div>
 
         <div className="flex flex-col justify-center items-center w-full">
-          <div className="border-2 border-yellow-300 min-w-72 text-center rounded-xl mb-4 p-2 bg-white break-all">
+          <div className="border-2 border-amber-400 min-w-72 text-center rounded-xl mb-4 p-2 bg-white break-all">
             {input === "" ? (
               <span className="text-2xl tracking-wider text-zinc-400">
                 let&rsquo;s get typing
               </span>
             ) : (
-              <span className="text-2xl">{input}</span>
+              <span className="text-2xl tracking-widest">{input}</span>
             )}
           </div>
         </div>
@@ -88,7 +106,7 @@ function Home() {
               keyboardRef={(r) => (keyboard = r)}
               onChange={(newInput) => onChange(newInput)}
               onKeyPress={(button) => onKeyPress(button)}
-              maxLength={50}
+              maxLength={45}
               theme={"hg-theme-default hg-layout-default my-theme"}
               layout={{
                 default: [
@@ -99,12 +117,8 @@ function Home() {
               }}
               buttonTheme={[
                 {
-                  class: "text-red-500 hg-red",
+                  class: "hg-red",
                   buttons: "{bksp}",
-                },
-                {
-                  class: "text-amber-500",
-                  buttons: "s p e l l a",
                 },
               ]}
             />
