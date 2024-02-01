@@ -45,7 +45,9 @@ function Home() {
 
   useEffect(() => {
     window.addEventListener("keydown", handleKeyPress);
-    const audioInstance = new Audio("/audio/musician_audio.ogg");
+    const audioInstance = new Audio(
+      "https://upload.wikimedia.org/wikipedia/commons/6/60/LL-Q7976-Mathieu_Kappler-musician.wav"
+    );
     setAudio(audioInstance);
 
     const handleAudioEnd = () => setIsPlaying(false);
