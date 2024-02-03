@@ -22,6 +22,7 @@ function Home({ words }) {
   const [feedback, setFeedback] = useState(null);
 
   const keyboardOnChange = (input) => {
+    console.log("Input changed", input);
     setInput(input);
   };
 
@@ -51,9 +52,9 @@ function Home({ words }) {
       if (currentWordIndex < words.length - 1) {
         const nextWordIndex = currentWordIndex + 1;
         const nextWord = words[nextWordIndex];
+        setInput("");
         setCurrentWordIndex(nextWordIndex);
         setWord(nextWord.word);
-        setInput("");
 
         const audioInstance = new Audio(nextWord.audio);
         audioInstance.addEventListener("ended", () => setIsPlaying(false));
@@ -172,6 +173,7 @@ function Home({ words }) {
           </button>
           <div className="rounded-xl overflow-hidden py-2 md:px-2 old-keyboard-style">
             <Keyboard
+              key={currentWordIndex}
               keyboardRef={(r) => (keyboard = r)}
               onChange={(newInput) => keyboardOnChange(newInput)}
               onKeyPress={(button) => onKeyPress(button)}
