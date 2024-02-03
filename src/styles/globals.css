@@ -84,3 +84,7 @@
     inset 0px 0px 8px rgba(255, 255, 255, 0.5), /* Inner white shadow for the 3D effect */
     inset 0 -3px 8px rgba(0, 0, 0, 0.5); /* Inner dark shadow to enhance 3D effect */
 }
+
+.hg-bigger-backspace {
+  width: 20%;
+}
