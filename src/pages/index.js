@@ -2,34 +2,33 @@ import { useState, useEffect } from "react";
 import Head from "next/head";
 import Keyboard from "react-simple-keyboard";
 import "react-simple-keyboard/build/css/index.css";
-import { FaPlay } from "react-icons/fa";
-import { FaArrowRightLong, FaPause } from "react-icons/fa6";
+import { createClient } from "@supabase/supabase-js";
+import clsx from "clsx";
+
+import { IoMdClose } from "react-icons/io";
+import { FaPlay, FaCheck, FaPause } from "react-icons/fa";
+import { FaArrowRightLong } from "react-icons/fa6";
 
 import Header from "@/components/Header";
 
-function Home() {
+function Home({ words }) {
+  console.log("Words", words);
   let keyboard;
+  const [currentWordIndex, setCurrentWordIndex] = useState(0);
+  const [word, setWord] = useState(words[currentWordIndex].word);
   const [input, setInput] = useState("");
   const [audio, setAudio] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [feedback, setFeedback] = useState(null);
 
-  const onChange = (newInput) => {
-    setInput(newInput);
+  const keyboardOnChange = (input) => {
+    setInput(input);
   };
 
   const onKeyPress = (button) => {
     console.log("Button pressed", button);
-  };
-
-  const handleKeyPress = (e) => {
-    let key = e.key;
-    if (key === "Backspace") {
+    if (button === "{bksp}") {
       setInput((prev) => prev.slice(0, -1));
-    } else if (/^[a-zA-Z]$/.test(key)) {
-      setInput((prev) => {
-        if (prev.length >= 45) return prev;
-        return prev + key.toLowerCase();
-      });
     }
   };
 
@@ -43,22 +42,70 @@ function Home() {
     setIsPlaying(!isPlaying);
   };
 
+  const handleSubmit = () => {
+    if (input === "") return;
+    if (input.toLowerCase() === word.toLowerCase()) {
+      console.log("Success on submit");
+      setFeedback("correct");
+
+      if (currentWordIndex < words.length - 1) {
+        const nextWordIndex = currentWordIndex + 1;
+        const nextWord = words[nextWordIndex];
+        setCurrentWordIndex(nextWordIndex);
+        setWord(nextWord.word);
+        setInput("");
+
+        const audioInstance = new Audio(nextWord.audio);
+        audioInstance.addEventListener("ended", () => setIsPlaying(false));
+        setAudio(audioInstance);
+
+        setTimeout(() => {
+          audioInstance.play();
+          setIsPlaying(true);
+        }, 700);
+      }
+    } else {
+      console.log("Input does not match the word");
+      setFeedback("incorrect");
+    }
+    setTimeout(() => setFeedback(null), 2000);
+  };
   useEffect(() => {
-    window.addEventListener("keydown", handleKeyPress);
-    const audioInstance = new Audio(
-      "https://upload.wikimedia.org/wikipedia/commons/6/60/LL-Q7976-Mathieu_Kappler-musician.wav"
-    );
+    const audioInstance = new Audio(words[currentWordIndex].audio);
     setAudio(audioInstance);
 
     const handleAudioEnd = () => setIsPlaying(false);
     audioInstance.addEventListener("ended", handleAudioEnd);
 
     return () => {
-      window.removeEventListener("keydown", handleKeyPress);
       audioInstance.removeEventListener("ended", handleAudioEnd);
     };
-  }, []);
+  }, [currentWordIndex, words]);
 
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      let key = e.key;
+      console.log("Key pressed", key);
+      if (key === "Enter") {
+        e.preventDefault();
+        console.log("Enter pressed");
+        handleSubmit();
+      } else if (key === "Backspace") {
+        setInput((prev) => prev.slice(0, -1));
+      } else if (/^[a-zA-Z]$/.test(key)) {
+        setInput((prev) => {
+          if (prev.length >= 45) return prev;
+          return prev + key.toLowerCase();
+        });
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyPress);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress);
+    };
+  }, [input, word]);
   return (
     <>
       <Head>
@@ -68,12 +115,12 @@ function Home() {
           content="initial-scale=1.0, width=device-width, maximum-scale=1.0, user-scalable=no"
         />
       </Head>
-      <div className="max-w-lg md:py-8 px-2 py-4 h-dvh w-dvw flex flex-col justify-between mx-auto">
+      <div className="max-w-xl md:py-8 px-2 py-4 h-dvh w-dvw flex flex-col justify-between mx-auto">
         <Header />
 
         <div className="flex items-center justify-center">
           <button
-            className="bg-gradient-to-bl from-yellow-400 to-amber-500 group outline-none text-white font-bold p-8 rounded-full"
+            className="bg-gradient-to-bl from-yellow-400 to-amber-500 group shadow-lg outline-none text-white font-bold p-8 rounded-full"
             onClick={playAudio}
           >
             {isPlaying ? (
@@ -85,7 +132,7 @@ function Home() {
         </div>
 
         <div className="flex flex-col justify-center items-center w-full">
-          <div className="border-2 border-amber-400 min-w-72 text-center rounded-xl mb-4 p-2 bg-white break-all">
+          <div className="border-2 border-amber-400 min-w-72 shadow-lg text-center rounded-xl mb-4 p-2 bg-gray-100 break-all">
             {input === "" ? (
               <span className="text-2xl tracking-wider text-zinc-400">
                 let&rsquo;s get typing
@@ -96,17 +143,37 @@ function Home() {
           </div>
         </div>
 
-        <div className="w-full md:max-w-lg px-1">
+        <div className="w-full px-1">
           <button
-            // onClick={handleSubmit}
-            className="md:flex items-center hidden mx-auto shadow-lg bg-gradient-to-bl from-yellow-400 to-amber-500 text-white px-8 py-2 my-8 rounded-xl mt-4"
+            onClick={handleSubmit}
+            className={clsx(
+              "md:flex items-center hidden mx-auto outline-none shadow-lg text-white text-xl px-8 py-2 my-8 rounded-xl mt-4",
+              feedback === "correct"
+                ? "bg-gradient-to-bl from-lime-400 to-lime-500"
+                : feedback === "incorrect"
+                ? "bg-gradient-to-bl from-red-200 via-red-400/80 to-orange-500"
+                : "bg-gradient-to-bl from-yellow-400 to-amber-500 "
+            )}
           >
-            Submit <FaArrowRightLong className="ml-2" />
+            {feedback === "correct" ? (
+              <>
+                correct <FaCheck className="ml-2" />
+              </>
+            ) : feedback === "incorrect" ? (
+              <div className="flex items-center">
+                <IoMdClose className="mr-2" />
+                try again
+              </div>
+            ) : (
+              <>
+                submit <FaArrowRightLong className="ml-2" />
+              </>
+            )}
           </button>
           <div className="rounded-xl overflow-hidden py-2 md:px-2 old-keyboard-style">
             <Keyboard
               keyboardRef={(r) => (keyboard = r)}
-              onChange={(newInput) => onChange(newInput)}
+              onChange={(newInput) => keyboardOnChange(newInput)}
               onKeyPress={(button) => onKeyPress(button)}
               maxLength={45}
               theme={"hg-theme-default hg-layout-default my-theme"}
@@ -119,23 +186,72 @@ function Home() {
               }}
               buttonTheme={[
                 {
-                  class: "hg-red",
+                  class: "hg-red hg-bigger-backspace",
                   buttons: "{bksp}",
                 },
               ]}
+              display={{
+                "{bksp}": "delete",
+              }}
+              physicalKeyboardHighlight={input.length < 45}
+              physicalKeyboardHighlightTextColor="#f59e0b"
+              physicalKeyboardHighlightBgColor="#d1d5db"
             />
           </div>
           <button
-            // onClick={handleSubmit}
-            className="mx-auto md:hidden bg-gradient-to-bl shadow-lg from-yellow-400 to-amber-500 text-white px-8 py-2 rounded-xl mt-4 flex items-center"
+            onClick={handleSubmit}
+            className={clsx(
+              "mx-auto md:hidden shadow-lg outline-none transition-colors tracking-wide text-white px-8 py-2 rounded-xl mt-4 flex items-center",
+              feedback === "correct"
+                ? "bg-gradient-to-bl from-lime-400 to-lime-500"
+                : feedback === "incorrect"
+                ? "bg-gradient-to-bl from-red-200 via-red-400/80 to-orange-500"
+                : "bg-gradient-to-bl from-yellow-400 to-amber-500 "
+            )}
           >
-            Submit
-            <FaArrowRightLong className="ml-2" />
+            {feedback === "correct" ? (
+              <>
+                Correct <FaCheck className="ml-2" />
+              </>
+            ) : feedback === "incorrect" ? (
+              <div className="flex items-center">
+                <IoMdClose className="mr-2" />
+                try again
+              </div>
+            ) : (
+              <>
+                submit <FaArrowRightLong className="ml-2" />
+              </>
+            )}
           </button>
         </div>
       </div>
     </>
   );
+}
+
+export async function getStaticProps() {
+  const SUPABASE_URL = process.env.SUPABASE_URL;
+  const SUPABASE_API_KEY = process.env.SUPABASE_API_KEY;
+  const supabase = createClient(SUPABASE_URL, SUPABASE_API_KEY);
+  const { data, error } = await supabase
+    .from("bee_dictionary")
+    .select("word, audio")
+    .neq("audio", null)
+    .order("shortdef", { ascending: false })
+    .limit(5);
+
+  if (error) {
+    console.error("Error fetching words from Supabase", error);
+    return { props: { words: [] } };
+  }
+
+  return {
+    props: {
+      words: data,
+    },
+    revalidate: 1,
+  };
 }
 
 export default Home;
