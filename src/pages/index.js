@@ -5,7 +5,7 @@ import "react-simple-keyboard/build/css/index.css";
 import { createClient } from "@supabase/supabase-js";
 import clsx from "clsx";
 
-import { IoMdClose } from "react-icons/io";
+import { IoMdCloseCircle } from "react-icons/io";
 import { FaPlay, FaCheck, FaPause } from "react-icons/fa";
 import { FaArrowRightLong } from "react-icons/fa6";
 
@@ -22,7 +22,6 @@ function Home({ words }) {
   const [feedback, setFeedback] = useState(null);
 
   const keyboardOnChange = (input) => {
-    console.log("Input changed", input);
     setInput(input);
   };
 
@@ -133,7 +132,7 @@ function Home({ words }) {
         </div>
 
         <div className="flex flex-col justify-center items-center w-full">
-          <div className="border-2 border-amber-400 min-w-72 shadow-lg text-center rounded-xl mb-4 p-2 bg-gray-100 break-all">
+          <div className="border-2 border-amber-400 min-w-72 shadow-lg text-center rounded-xl mb-4 p-2 backdrop-blur-sm bg-gray-200/30 break-all">
             {input === "" ? (
               <span className="text-2xl tracking-wider text-zinc-400">
                 let&rsquo;s get typing
@@ -144,34 +143,8 @@ function Home({ words }) {
           </div>
         </div>
 
-        <div className="w-full px-1">
-          <button
-            onClick={handleSubmit}
-            className={clsx(
-              "md:flex items-center hidden mx-auto outline-none shadow-lg text-white text-xl px-8 py-2 my-8 rounded-xl mt-4",
-              feedback === "correct"
-                ? "bg-gradient-to-bl from-lime-400 to-lime-500"
-                : feedback === "incorrect"
-                ? "bg-gradient-to-bl from-red-200 via-red-400/80 to-orange-500"
-                : "bg-gradient-to-bl from-yellow-400 to-amber-500 "
-            )}
-          >
-            {feedback === "correct" ? (
-              <>
-                correct <FaCheck className="ml-2" />
-              </>
-            ) : feedback === "incorrect" ? (
-              <div className="flex items-center">
-                <IoMdClose className="mr-2" />
-                try again
-              </div>
-            ) : (
-              <>
-                submit <FaArrowRightLong className="ml-2" />
-              </>
-            )}
-          </button>
-          <div className="rounded-xl overflow-hidden py-2 md:px-2 old-keyboard-style">
+        <div className="w-full px-1 flex flex-col">
+          <div className="rounded-xl overflow-hidden py-2 md:px-2 h-[156px]  old-keyboard-style">
             <Keyboard
               key={currentWordIndex}
               keyboardRef={(r) => (keyboard = r)}
@@ -203,27 +176,30 @@ function Home({ words }) {
           <button
             onClick={handleSubmit}
             className={clsx(
-              "mx-auto md:hidden shadow-lg outline-none transition-colors tracking-wide text-white px-8 py-2 rounded-xl mt-4 flex items-center",
+              "order-last md:order-first items-center transition-shadow duration-300 mx-auto outline-none shadow-lg text-white text-xl px-8 md:my-8 rounded-xl mt-4",
               feedback === "correct"
-                ? "bg-gradient-to-bl from-lime-400 to-lime-500"
+                ? "bg-gradient-to-bl shadow-lime-200 from-lime-400 to-lime-500"
                 : feedback === "incorrect"
-                ? "bg-gradient-to-bl from-red-200 via-red-400/80 to-orange-500"
+                ? "border-red-300 shadow-red-100 border bg-gradient-to-bl from-gray-100 via-gray-200 to-gray-300"
                 : "bg-gradient-to-bl from-yellow-400 to-amber-500 "
             )}
           >
             {feedback === "correct" ? (
-              <>
-                Correct <FaCheck className="ml-2" />
-              </>
+              <div className="flex items-center py-2">
+                correct <FaCheck className="ml-2" />
+              </div>
             ) : feedback === "incorrect" ? (
-              <div className="flex items-center">
-                <IoMdClose className="mr-2" />
-                try again
+              <div className="flex items-center text-gray-900 py-[0.44rem]">
+                <IoMdCloseCircle className="mr-2 h-6 w-6 text-red-400" />
+                try{" "}
+                <span className="ml-1 underline decoration-wavy underline-offset-[5px] decoration-red-500">
+                  agen
+                </span>
               </div>
             ) : (
-              <>
+              <div className="flex items-center py-2">
                 submit <FaArrowRightLong className="ml-2" />
-              </>
+              </div>
             )}
           </button>
         </div>
@@ -240,7 +216,7 @@ export async function getStaticProps() {
     .from("bee_dictionary")
     .select("word, audio")
     .neq("audio", null)
-    .order("shortdef", { ascending: false })
+    .order("definition", { ascending: false })
     .limit(5);
 
   if (error) {
