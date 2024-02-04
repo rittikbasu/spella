@@ -79,9 +79,9 @@
 
     /* Adding 3D border effect */
     box-shadow: 
-    0 4px 8px rgba(0, 0, 0, 0.2), /* Outer shadow for depth */
-    0 6px 20px rgba(0, 0, 0, 0.19), /* Additional layer of shadow for more depth */
-    inset 0px 0px 8px rgba(255, 255, 255, 0.5), /* Inner white shadow for the 3D effect */
+    0 4px 8px rgba(0, 0, 0, 0.3), /* Outer shadow for depth */
+    0 6px 20px rgba(0, 0, 0, 0.3), /* Additional layer of shadow for more depth */
+    inset 0px 0px 8px rgba(255, 255, 255, 0.4), /* Inner white shadow for the 3D effect */
     inset 0 -3px 8px rgba(0, 0, 0, 0.5); /* Inner dark shadow to enhance 3D effect */
 }
 
