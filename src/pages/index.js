@@ -23,6 +23,7 @@ function Home({ words }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [feedback, setFeedback] = useState(null);
   const [showResults, setShowResults] = useState(false);
+  const [isTruncated, setIsTruncated] = useState(true);
 
   const keyboardOnChange = (input) => {
     setInput(input);
@@ -177,9 +178,15 @@ function Home({ words }) {
               {inputLog.map((entry, index) => (
                 <div
                   key={index}
-                  className="flex justify-start items-center p-2 break-all space-x-4"
+                  className="flex justify-start items-center p-2 space-x-4 break-all text-pretty"
                 >
-                  <span className="text-lg font-medium flex-1 text-left">
+                  <span
+                    className={clsx(
+                      "text-lg font-medium flex-1 text-left",
+                      isTruncated ? "truncate" : ""
+                    )}
+                    onClick={() => setIsTruncated(!isTruncated)}
+                  >
                     <span className={clsx("", getColorClass(index))}>
                       {entry.correct}
                     </span>
