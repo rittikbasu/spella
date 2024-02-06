@@ -318,12 +318,8 @@ export async function getStaticProps() {
   const SUPABASE_API_KEY = process.env.SUPABASE_API_KEY;
   const supabase = createClient(SUPABASE_URL, SUPABASE_API_KEY);
   const { data, error } = await supabase
-    .from("spella_dictionary")
-    .select("word, openai_audio")
-    .neq("openai_audio", null)
-    .gt("syllable", 4)
-    .order("pos", { ascending: false })
-    .limit(10);
+    .from("spellol_daily")
+    .select("id, word, openai_audio");
 
   if (error) {
     console.error("Error fetching words from Supabase", error);
