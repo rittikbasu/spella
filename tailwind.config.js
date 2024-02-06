@@ -18,10 +18,23 @@ module.exports = {
   },
   theme: {
     extend: {
+      fontFamily: {
+        josefin: ["var(--font-josefin-sans)"],
+        open: ["var(--font-open-sans)"],
+      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      },
+      keyframes: {
+        blink: {
+          "0%, 100%": { borderColor: "transparent" },
+          "50%": { borderColor: "#3b82f6" },
+        },
+      },
+      animation: {
+        blink: "blink 1s step-end infinite",
       },
     },
   },
