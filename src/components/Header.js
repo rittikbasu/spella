@@ -1,6 +1,7 @@
 import React from "react";
 import { GiBee } from "react-icons/gi";
 import { BsSpellcheck } from "react-icons/bs";
+import { IoMdArrowDropdown } from "react-icons/io";
 
 const Header = () => {
   return (
@@ -8,7 +9,7 @@ const Header = () => {
       <div className="flex items-center gap-1">
         <GradientIcon
           IconComponent={GiBee}
-          svgClassName="w-7 h-7 relative md:bottom-[1.1rem] bottom-[0.9rem]"
+          svgClassName="w-7 h-7 relative md:bottom-[1.1rem] bottom-[0.9rem] animate-wiggle"
           viewBox={"0 0 16 16"}
         />
         <div className="md:text-5xl text-4xl font-josefin font-bold ml-[-1rem]">
@@ -21,10 +22,11 @@ const Header = () => {
         </div>
       </div>
       <div className="flex items-center py-1 pl-4 pr-1 gap-2 bg-gradient-to-r border-y border-l border-black/5 from-lime-100/50 via-lime-100/80 to-lime-50/50 rounded-l-xl">
-        <BsSpellcheck className="w-7 h-7" />
-        <span className="md:text-3xl text-xl font-semibold tracking-wider text-black">
+        <BsSpellcheck className="w-6 h-6" />
+        <span className="md:text-3xl text-lg font-semibold tracking-wider text-black">
           daily
         </span>
+        <IoMdArrowDropdown className="w-4 h-4" />
       </div>
     </div>
   );

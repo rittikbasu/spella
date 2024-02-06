@@ -32,9 +32,14 @@ module.exports = {
           "0%, 100%": { borderColor: "transparent" },
           "50%": { borderColor: "#3b82f6" },
         },
+        wiggle: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-5px)" },
+        },
       },
       animation: {
         blink: "blink 1s step-end infinite",
+        wiggle: "wiggle 10s ease-in-out infinite",
       },
     },
   },
