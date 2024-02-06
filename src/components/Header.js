@@ -4,19 +4,21 @@ import { BsSpellcheck } from "react-icons/bs";
 
 const Header = () => {
   return (
-    <div className="w-full max-w-xl mx-auto mb-4 pl-2 md:px-2 flex justify-between items-center">
+    <div className="w-full max-w-xl mb-4 md:px-2 flex justify-between items-center">
       <div className="flex items-center gap-1">
         <GradientIcon
           IconComponent={GiBee}
-          svgClassName="w-7 h-7 ml-2"
+          svgClassName="w-7 h-7 relative md:bottom-[1.1rem] bottom-[0.9rem]"
           viewBox={"0 0 16 16"}
         />
-        <span className="md:text-5xl text-4xl text-left font-josefin font-bold bg-clip-text text-transparent bg-gradient-to-b from-amber-200 to-amber-500">
-          spel
+        <div className="md:text-5xl text-4xl font-josefin font-bold ml-[-1rem]">
+          <span className="bg-clip-text text-transparent bg-gradient-to-b from-amber-200 to-amber-500">
+            spel
+          </span>
           <span className="bg-clip-text text-transparent bg-gradient-to-b from-gray-500/80 to-black">
             lol
           </span>
-        </span>
+        </div>
       </div>
       <div className="flex items-center py-1 pl-4 pr-1 gap-2 bg-gradient-to-r border-y border-l border-black/5 from-lime-100/50 via-lime-100/80 to-lime-50/50 rounded-l-xl">
         <BsSpellcheck className="w-7 h-7" />
