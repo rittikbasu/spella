@@ -24,6 +24,8 @@ function Home({ words }) {
   const [feedback, setFeedback] = useState(null);
   const [showResults, setShowResults] = useState(false);
   const [isTruncated, setIsTruncated] = useState(true);
+  const [isReportMode, setIsReportMode] = useState(false);
+  const [reportedWords, setReportedWords] = useState([]);
 
   const keyboardOnChange = (input) => {
     setInput(input);
@@ -93,6 +95,21 @@ function Home({ words }) {
       setShowResults(true);
     }
     setTimeout(() => setFeedback(null), 2000);
+  };
+
+  const handleCheckboxChange = (e) => {
+    const checked = e.target.checked;
+    const value = e.target.value;
+    if (checked) {
+      setReportedWords((prev) => [...prev, value]);
+    } else {
+      setReportedWords((prev) => prev.filter((word) => word !== value));
+    }
+  };
+
+  const handleReportBug = (e) => {
+    const submit = !isReportMode;
+    setIsReportMode(submit);
   };
 
   useEffect(() => {
@@ -200,8 +217,20 @@ function Home({ words }) {
                   >
                     {entry.user}
                   </span>
-                  {/* if correct put correct icon else put incorrect icon */}
-                  {entry.user.toLowerCase() === entry.correct.toLowerCase() ? (
+                  {isReportMode ? (
+                    // <input
+                    //   type="checkbox"
+                    //   className="border border-gray-300 rounded p-1"
+                    //   onChange={(e) => console.log(e.target.checked)}
+                    // />
+                    <input
+                      type="checkbox"
+                      value={entry.correct}
+                      className="w-4 h-4 rounded-full outline-none"
+                      onChange={handleCheckboxChange}
+                    />
+                  ) : entry.user.toLowerCase() ===
+                    entry.correct.toLowerCase() ? (
                     <FaCheck className="text-lime-400" />
                   ) : (
                     <ImCross className="text-red-400" />
@@ -210,14 +239,21 @@ function Home({ words }) {
               ))}
             </div>
             <div className="flex flex-col justify-center items-center">
-              <p className="text-justify text-sm text-gray-600">
-                faced an issue with the audio or description?
-              </p>
+              {isReportMode ? (
+                <p className="text-justify text-sm text-gray-600">
+                  select the words you faced an issue with
+                </p>
+              ) : (
+                <p className="text-justify text-sm text-gray-600">
+                  faced an issue with the audio or description?
+                </p>
+              )}
               <button
-                className="bg-gradient-to-t shadow-lg from-red-800 to-red-500 text-white font-bold p-2 rounded-lg mt-4 flex items-center"
-                // onClick={() => setShowResults(false)}
+                className="bg-gradient-to-t w-32 shadow-lg from-red-800 to-red-500 text-white font-bold rounded-lg mt-4 flex items-center justify-center py-2"
+                onClick={handleReportBug}
               >
-                <FaBug className="mr-2" /> report bug
+                <FaBug className="mr-2" />{" "}
+                {isReportMode ? "submit" : "report bug"}
               </button>
             </div>
           </div>
