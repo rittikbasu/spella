@@ -5,7 +5,7 @@ import { IoMdArrowDropdown } from "react-icons/io";
 
 const Header = () => {
   return (
-    <div className="w-full max-w-xl mb-4 md:px-2 flex justify-between items-center">
+    <div className="w-full max-w-xl mb-4 flex justify-between items-center">
       <div className="flex items-center gap-1">
         <GradientIcon
           IconComponent={GiBee}
@@ -21,13 +21,13 @@ const Header = () => {
           </span>
         </div>
       </div>
-      <div className="flex items-center py-1 pl-4 pr-1 gap-2 bg-gradient-to-r border-y border-l border-black/5 from-lime-100/50 via-lime-100/80 to-lime-50/50 rounded-l-xl">
-        <BsSpellcheck className="w-6 h-6" />
-        <span className="md:text-3xl text-lg font-semibold tracking-wider text-black">
-          daily
+      <button className="flex items-center justify-center py-1 pl-4 pr-2 bg-gradient-to-t from-lime-400 via-lime-400/80 to-lime-300/50 text-white rounded-full">
+        {/* <BsSpellcheck className="w-7 h-7 md:h-8 md:w-8 mr-2" /> */}
+        <span className="md:text-2xl text-lg font-semibold tracking-wider mr-1">
+          menu
         </span>
-        <IoMdArrowDropdown className="w-4 h-4" />
-      </div>
+        <IoMdArrowDropdown className="w-5 h-5 md:w-7 md:h-7" />
+      </button>
     </div>
   );
 };
