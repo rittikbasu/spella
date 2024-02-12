@@ -155,15 +155,18 @@ function Home({ words }) {
             },
             body: JSON.stringify({ words: reportedWords }),
           });
+
           if (response.ok) {
-            console.log("Reported successfully");
-            toast.success("Reported successfully");
+            console.log("reported successfully");
+            toast.success("reported successfully");
             setReportedWords([]);
           } else {
-            console.error("Error reporting bug", response.statusText);
+            console.error("error reporting bug", response.statusText);
+            toast.error("error reporting bug");
           }
         } catch (error) {
-          console.error("Error reporting bug", error);
+          console.error("error reporting bug", error);
+          toast.error("error reporting bug");
         }
       };
 
@@ -306,7 +309,7 @@ function Home({ words }) {
             </div>
 
             <div className="flex flex-col justify-center items-center w-full">
-              <div className="text-center mb-4 p-2 backdrop-blur-sm break-all">
+              <div className="text-center space-y-4 p-2 bg-gray-100/30 break-all">
                 {input === "" ? (
                   <span className="text-2xl md:text-4xl tracking-wider text-zinc-400">
                     let&rsquo;s get typing
@@ -317,6 +320,9 @@ function Home({ words }) {
                     {input}
                   </span>
                 )}
+                <div className="text-sm text-gray-400 tracking-wider">
+                  {currentWordIndex + 1} of {words.length}
+                </div>
               </div>
             </div>
 
