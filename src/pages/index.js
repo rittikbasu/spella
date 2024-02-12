@@ -108,29 +108,6 @@ function Home({ words }) {
     }
   };
 
-  const handleReportBug = async () => {
-    const submit = !isReportMode;
-    console.log(submit, reportedWords);
-    if (submit && reportedWords.length !== 0) {
-      console.log("Submitting");
-      try {
-        const respone = await fetch("/api/incrementReports", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ words: reportedWords }),
-        });
-        console.log("Reported successfully");
-        setReportedWords([]);
-        toast.success("reported successfully");
-      } catch (error) {
-        console.error("Error reporting bug", error);
-      }
-    }
-    setIsReportMode(!isReportMode);
-  };
-
   useEffect(() => {
     if (words.length > 0) {
       const initialAudio = new Audio(words[0].openai_audio);
@@ -164,6 +141,35 @@ function Home({ words }) {
       window.removeEventListener("keydown", handleKeyPress);
     };
   }, [input, word]);
+
+  useEffect(() => {
+    // Only attempt to submit when not in report mode and there are words to report
+    if (!isReportMode && reportedWords.length > 0) {
+      const submitReport = async () => {
+        console.log("Submitting");
+        try {
+          const response = await fetch("/api/incrementReports", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ words: reportedWords }),
+          });
+          if (response.ok) {
+            console.log("Reported successfully");
+            toast.success("Reported successfully");
+            setReportedWords([]);
+          } else {
+            console.error("Error reporting bug", response.statusText);
+          }
+        } catch (error) {
+          console.error("Error reporting bug", error);
+        }
+      };
+
+      submitReport();
+    }
+  }, [reportedWords, isReportMode]);
 
   const getColorClass = (index) => {
     if (index < 2)
@@ -268,12 +274,20 @@ function Home({ words }) {
                   //   :
                   "from-red-800 to-red-500"
                 )}
-                onClick={handleReportBug}
+                onClick={() => setIsReportMode((prev) => !prev)}
               >
                 <FaBug className="mr-2" />{" "}
-                {isReportMode ? "submit" : "report bug"}
+                {isReportMode
+                  ? reportedWords.length === 0
+                    ? "cancel"
+                    : "submit"
+                  : "report bug"}
               </button>
-              <Toaster />
+              <Toaster
+                position="top-center"
+                visibleToasts={1}
+                // richColors={true}
+              />
             </div>
           </div>
         ) : (
