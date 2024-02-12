@@ -8,7 +8,7 @@ const josefinSans = Josefin_Sans({
   variable: "--font-josefin-sans",
 });
 
-const openSans = Work_Sans({
+const workSans = Work_Sans({
   weights: [400, 600, 700],
   display: "swap",
   subsets: ["latin"],
@@ -18,7 +18,7 @@ const openSans = Work_Sans({
 export default function App({ Component, pageProps }) {
   return (
     <div
-      className={`${josefinSans.variable} ${openSans.className} font-sans antialiased`}
+      className={`${josefinSans.variable} ${workSans.className} font-sans antialiased`}
     >
       <div className="min-h-screen fixed inset-0 -z-10 w-full bg-gray-100 bg-dot-gray-500/[0.2] flex items-center justify-center">
         {/* Radial gradient for the container to give a faded look */}
