@@ -67,7 +67,7 @@ const GradientIcon = ({
 const MenuModal = ({ onClose }) => {
   return (
     <div className="fixed inset-0 z-10 bg-black/30 backdrop-blur-md flex justify-center items-center">
-      <div className=" bg-gradient-to-t from-lime-200/40 via-lime-200/30 to-lime-200/5 p-5 md:p-6 rounded-2xl w-4/5 max-w-72 flex justify-center">
+      <div className=" bg-gradient-to-t from-lime-200/40 via-lime-200/30 to-lime-200/10 p-5 md:p-6 rounded-2xl w-4/5 max-w-72 flex justify-center">
         <ul className="space-y-8 text-2xl md:text-3xl text-gray-800 tracking-wide font-light">
           <li className="flex items-center gap-6 cursor-pointer hover:text-amber-600">
             <BsSpellcheck className="" />
