@@ -4,6 +4,7 @@ import Keyboard from "react-simple-keyboard";
 import "react-simple-keyboard/build/css/index.css";
 import { createClient } from "@supabase/supabase-js";
 import clsx from "clsx";
+import { toast, Toaster } from "sonner";
 
 import { IoMdCloseCircle } from "react-icons/io";
 import { ImCross } from "react-icons/im";
@@ -13,7 +14,7 @@ import { FaArrowRightLong } from "react-icons/fa6";
 import Header from "@/components/Header";
 
 function Home({ words }) {
-  console.log("Words", words);
+  // console.log("Words", words);
   let keyboard;
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [word, setWord] = useState(words[currentWordIndex].word);
@@ -107,9 +108,27 @@ function Home({ words }) {
     }
   };
 
-  const handleReportBug = (e) => {
+  const handleReportBug = async () => {
     const submit = !isReportMode;
-    setIsReportMode(submit);
+    console.log(submit, reportedWords);
+    if (submit && reportedWords.length !== 0) {
+      console.log("Submitting");
+      try {
+        const respone = await fetch("/api/incrementReports", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ words: reportedWords }),
+        });
+        console.log("Reported successfully");
+        setReportedWords([]);
+        toast.success("reported successfully");
+      } catch (error) {
+        console.error("Error reporting bug", error);
+      }
+    }
+    setIsReportMode(!isReportMode);
   };
 
   useEffect(() => {
@@ -126,10 +145,8 @@ function Home({ words }) {
   useEffect(() => {
     const handleKeyPress = (e) => {
       let key = e.key;
-      console.log("Key pressed", key);
       if (key === "Enter") {
         e.preventDefault();
-        console.log("Enter pressed");
         handleSubmit();
       } else if (key === "Backspace") {
         setInput((prev) => prev.slice(0, -1));
@@ -218,11 +235,6 @@ function Home({ words }) {
                     {entry.user}
                   </span>
                   {isReportMode ? (
-                    // <input
-                    //   type="checkbox"
-                    //   className="border border-gray-300 rounded p-1"
-                    //   onChange={(e) => console.log(e.target.checked)}
-                    // />
                     <input
                       type="checkbox"
                       value={entry.correct}
@@ -249,12 +261,19 @@ function Home({ words }) {
                 </p>
               )}
               <button
-                className="bg-gradient-to-t w-32 shadow-lg from-red-800 to-red-500 text-white font-bold rounded-lg mt-4 flex items-center justify-center py-2"
+                className={clsx(
+                  "bg-gradient-to-t w-32 shadow-lg text-white font-bold rounded-lg mt-4 flex items-center justify-center py-2",
+                  // isReportMode
+                  //   ? "from-lime-500 to-lime-300"
+                  //   :
+                  "from-red-800 to-red-500"
+                )}
                 onClick={handleReportBug}
               >
                 <FaBug className="mr-2" />{" "}
                 {isReportMode ? "submit" : "report bug"}
               </button>
+              <Toaster />
             </div>
           </div>
         ) : (
@@ -265,9 +284,9 @@ function Home({ words }) {
                 onClick={playAudio}
               >
                 {isPlaying ? (
-                  <FaPause className="text-4xl text-black/70 group-hover:text-white" />
+                  <FaPause className="text-4xl text-orange-950 group-hover:text-white" />
                 ) : (
-                  <FaPlay className="text-4xl text-black/70 group-hover:text-white" />
+                  <FaPlay className="text-4xl text-orange-950 group-hover:text-white" />
                 )}
               </button>
             </div>
@@ -277,10 +296,12 @@ function Home({ words }) {
                 {input === "" ? (
                   <span className="text-2xl md:text-4xl tracking-wider text-zinc-400">
                     let&rsquo;s get typing
-                    <span class="border-l-2 border-transparent animate-blink"></span>
+                    <span className="border-l-2 border-transparent animate-blink"></span>
                   </span>
                 ) : (
-                  <span className="text-2xl tracking-widest">{input}</span>
+                  <span className="text-2xl md:text-4xl tracking-widest">
+                    {input}
+                  </span>
                 )}
               </div>
             </div>
