@@ -309,7 +309,10 @@ function Home({ words }) {
             </div>
 
             <div className="flex flex-col justify-center items-center w-full">
-              <div className="text-center space-y-4 p-2 bg-gray-100/30 break-all">
+              <div className="text-sm text-gray-400 tracking-wider bg-gray-100/50">
+                {currentWordIndex + 1} of {words.length}
+              </div>
+              <div className="text-center p-2 mt-4 break-all backdrop-blur-sm">
                 {input === "" ? (
                   <span className="text-2xl md:text-4xl tracking-wider text-zinc-400">
                     let&rsquo;s get typing
@@ -320,9 +323,6 @@ function Home({ words }) {
                     {input}
                   </span>
                 )}
-                <div className="text-sm text-gray-400 tracking-wider">
-                  {currentWordIndex + 1} of {words.length}
-                </div>
               </div>
             </div>
 
