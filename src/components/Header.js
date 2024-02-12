@@ -78,14 +78,14 @@ const MenuModal = ({ onClose }) => {
             practice
           </li>
           <li className="flex items-center gap-6 cursor-pointer hover:text-amber-600">
-            <FaFlagCheckered className=" " />
+            <FaFlagCheckered className="w-[1.4rem] h-[1.4rem] md:w-7 md:h-7" />
             leaderboard
           </li>
           <button
             onClick={onClose}
             className="text-red-500 flex items-center gap-6 cursor-pointer hover:text-red-700"
           >
-            <ImCross className="w-5 h-5 md:w-6 md:h-6" />
+            <ImCross className="w-[1.1rem] h-[1.1rem] md:w-6 md:h-6" />
             close
           </button>
         </ul>
