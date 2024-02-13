@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import Keyboard from "react-simple-keyboard";
 import "react-simple-keyboard/build/css/index.css";
 import { createClient } from "@supabase/supabase-js";
@@ -16,8 +17,10 @@ import Header from "@/components/Header";
 function Home({ words }) {
   // console.log("Words", words);
   let keyboard;
+  const router = useRouter();
+  const [userID, setUserID] = useState(null);
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
-  const [word, setWord] = useState(words[currentWordIndex].word);
+  const [word, setWord] = useState(words[currentWordIndex]?.word);
   const [input, setInput] = useState("");
   const [inputLog, setInputLog] = useState([]);
   const audioRef = useRef(null);
@@ -51,7 +54,7 @@ function Home({ words }) {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (input === "") return;
 
     // Stop the current audio if it exists
@@ -68,6 +71,11 @@ function Home({ words }) {
     } else {
       setFeedback("incorrect");
     }
+
+    if (userID) {
+      updateDailyInputs(userID, input, word);
+    }
+
     const nextWordIndex = currentWordIndex + 1;
 
     if (nextWordIndex < words.length) {
@@ -108,16 +116,64 @@ function Home({ words }) {
     }
   };
 
-  useEffect(() => {
-    if (words.length > 0) {
-      const initialAudio = new Audio(words[0].openai_audio);
-      audioRef.current = initialAudio;
+  async function updateDailyInputs(userId, input, correct) {
+    const response = await fetch("/api/updateDailyInputs", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId,
+        input,
+        correct,
+      }),
+    });
 
-      initialAudio.onended = () => {
-        setIsPlaying(false);
-      };
+    if (!response.ok) {
+      toast.error("error updating daily inputs");
     }
-  }, [words]);
+
+    return response.json();
+  }
+
+  const setupAudio = async (wordIndex) => {
+    const audioUrl = words[wordIndex]?.openai_audio;
+    if (audioUrl) {
+      const newAudio = new Audio(audioUrl);
+      audioRef.current = newAudio;
+
+      newAudio.onended = () => setIsPlaying(false);
+    }
+  };
+
+  const fetchAttemptedWords = async (userId) => {
+    let index = 0;
+    try {
+      const response = await fetch(`/api/attemptedWords?userId=${userId}`);
+      const attemptedWords = await response.json();
+
+      if (attemptedWords.length === 0) return;
+
+      setInputLog(
+        attemptedWords.map((word) => ({
+          user: word.input,
+          correct: word.correct,
+        }))
+      );
+
+      index = attemptedWords.length < words.length ? attemptedWords.length : 0;
+      setCurrentWordIndex(index);
+      setWord(words[index].word);
+
+      if (attemptedWords.length >= words.length) {
+        setShowResults(true);
+      }
+    } catch (error) {
+      console.error("Error fetching attempted words:", error);
+    } finally {
+      await setupAudio(index);
+    }
+  };
 
   useEffect(() => {
     const handleKeyPress = (e) => {
@@ -143,7 +199,6 @@ function Home({ words }) {
   }, [input, word]);
 
   useEffect(() => {
-    // Only attempt to submit when not in report mode and there are words to report
     if (!isReportMode && reportedWords.length > 0) {
       const submitReport = async () => {
         console.log("Submitting");
@@ -157,11 +212,9 @@ function Home({ words }) {
           });
 
           if (response.ok) {
-            console.log("reported successfully");
             toast.success("reported successfully");
             setReportedWords([]);
           } else {
-            console.error("error reporting bug", response.statusText);
             toast.error("error reporting bug");
           }
         } catch (error) {
@@ -173,6 +226,22 @@ function Home({ words }) {
       submitReport();
     }
   }, [reportedWords, isReportMode]);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const { id } = JSON.parse(storedUser);
+
+      if (id) {
+        setUserID(id);
+        fetchAttemptedWords(id);
+      } else {
+        router.push("/signup");
+      }
+    } else {
+      router.push("/signup");
+    }
+  }, []);
 
   const getColorClass = (index) => {
     if (index < 2)
@@ -309,10 +378,10 @@ function Home({ words }) {
             </div>
 
             <div className="flex flex-col justify-center items-center w-full">
-              <div className="text-sm text-gray-400 tracking-wider bg-gray-100/50">
+              <div className="text-sm text-gray-400 tracking-wider bg-gray-100/30">
                 {currentWordIndex + 1} of {words.length}
               </div>
-              <div className="text-center p-2 mt-4 break-all backdrop-blur-sm">
+              <div className="text-center px-2 mt-4 break-all backdrop-blur-sm">
                 {input === "" ? (
                   <span className="text-2xl md:text-4xl tracking-wider text-zinc-400">
                     let&rsquo;s get typing
