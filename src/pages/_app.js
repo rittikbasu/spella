@@ -5,20 +5,20 @@ const josefinSans = Josefin_Sans({
   weights: [400, 600, 700],
   display: "swap",
   subsets: ["latin"],
-  variable: "--font-josefin-sans",
+  variable: "--font-josefin",
 });
 
 const workSans = Work_Sans({
   weights: [400, 600, 700],
   display: "swap",
   subsets: ["latin"],
-  variable: "--font-open-sans",
+  variable: "--font-work-sans",
 });
 
 export default function App({ Component, pageProps }) {
   return (
     <div
-      className={`${josefinSans.variable} ${workSans.className} font-sans antialiased`}
+      className={`${josefinSans.variable} ${workSans.className} antialiased`}
     >
       <div className="min-h-screen fixed inset-0 -z-10 w-full bg-gray-100 bg-dot-gray-500/[0.2] flex items-center justify-center">
         {/* Radial gradient for the container to give a faded look */}

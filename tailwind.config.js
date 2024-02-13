@@ -19,8 +19,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        josefin: ["var(--font-josefin-sans)"],
-        open: ["var(--font-open-sans)"],
+        josefin: ["var(--font-josefin)"],
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
