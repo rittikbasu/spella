@@ -29,7 +29,7 @@ const Header = () => {
           </div>
         </div>
         <button
-          className="flex items-center gap-2 py-1 pl-4 pr-1 md:bg-gradient-to-t hover:shadow-lg hover:shadow-lime-200/70 bg-gradient-to-r md:border border-y border-l border-black/5 from-lime-100/50 via-lime-100/80 to-lime-50/50 md:rounded-xl rounded-l-xl outline-none"
+          className="flex items-center gap-2 py-1 pl-4 pr-1 md:px-4 md:bg-gradient-to-t hover:shadow-lg hover:shadow-lime-200/70 bg-gradient-to-r md:border border-y border-l border-black/5 from-lime-100/50 via-lime-100/80 to-lime-50/50 md:rounded-xl rounded-l-xl outline-none"
           onClick={toggleModal}
         >
           <MdOutlineRestaurantMenu className="w-5 h-5 md:h-6 md:w-6" />
@@ -66,7 +66,7 @@ const GradientIcon = ({
 
 const MenuModal = ({ onClose }) => {
   return (
-    <div className="fixed inset-0 z-10 bg-black/30 backdrop-blur-md flex justify-center items-center">
+    <div className="fixed inset-0 z-10 bg-black/30 backdrop-blur-lg flex justify-center items-center">
       <div className=" bg-gradient-to-t from-lime-200/40 via-lime-200/30 to-lime-200/10 p-5 md:p-6 rounded-2xl w-4/5 max-w-72 flex justify-center">
         <ul className="space-y-8 text-2xl md:text-3xl text-gray-800 tracking-wide font-light">
           <li className="flex items-center gap-6 cursor-pointer hover:text-amber-600">
