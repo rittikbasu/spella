@@ -48,11 +48,11 @@ export default function Home() {
           content="initial-scale=1.0, width=device-width, maximum-scale=1.0, user-scalable=no"
         />
       </Head>
-      <div className="max-w-xl md:py-8 px-2 pt-4 h-dvh w-dvw flex flex-col mx-auto overflow-x-hidden">
+      <div className="max-w-xl md:py-8 px-2 pt-4 h-dvh w-dvw flex flex-col mx-auto">
         <Header />
-        <main className="flex flex-col items-center justify-center text-center h-full px-4 gap-y-4 md:pb-8 pb-4">
+        <main className="flex flex-col items-center justify-center text-center h-full px-4 gap-y-4 md:pb-8 pb-4 overflow-x-clip">
           <Bee />
-          <div className="flex flex-col gap-y-2 md:gap-y-4 md:mt-16 items-center">
+          <div className="flex flex-col gap-y-2 md:gap-y-4 md:mt-8 items-center">
             <p className="text-2xl bg-clip-text text-transparent bg-gradient-to-b from-gray-900 to-gray-500">
               remember spelling bees?
             </p>
@@ -64,7 +64,7 @@ export default function Home() {
             </span>
           </div>
           <button
-            className="bg-gradient-to-bl from-yellow-400 to-amber-500 shadow-lg text-white font-bold py-2 rounded-xl text-2xl mt-2 md:mt-12 px-8 hover:shadow-2xl active:scale-95 transition-all duration-300 outline-none"
+            className="bg-gradient-to-bl from-yellow-400 to-amber-500 shadow-lg text-white font-bold py-2 rounded-xl text-2xl mt-2 md:mt-8 px-8 hover:shadow-2xl active:scale-95 transition-all duration-300 outline-none"
             onClick={handlePlayNow}
           >
             <div className="flex items-center justify-center">
