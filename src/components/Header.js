@@ -29,7 +29,7 @@ const Header = () => {
           </div>
         </div>
         <button
-          className="flex items-center gap-2 py-1 pl-4 pr-1 md:px-4 md:bg-gradient-to-t hover:shadow-lg hover:shadow-lime-200/70 bg-gradient-to-r md:border border-y border-l border-black/5 from-lime-100/50 via-lime-100/80 to-lime-50/50 md:rounded-xl rounded-l-xl outline-none"
+          className="flex items-center gap-2 py-1 pl-4 pr-1 md:px-4 md:bg-gradient-to-t bg-gradient-to-r md:border border-y border-l border-black/5 from-lime-100/50 via-lime-100/80 to-lime-50/50 md:rounded-xl rounded-l-xl outline-none"
           onClick={() => setModalOpen(true)}
         >
           <MdOutlineRestaurantMenu className="w-5 h-5 md:h-6 md:w-6" />
@@ -71,28 +71,28 @@ const MenuModal = ({ setModalOpen }) => {
         <ul className="space-y-8 text-2xl md:text-3xl text-gray-800 tracking-wide font-light">
           <Link
             href="/daily"
-            className="flex items-center gap-6 cursor-pointer hover:text-amber-600"
+            className="flex items-center gap-6 cursor-pointer hover:text-yellow-600"
           >
             <BsSpellcheck className="" />
             daily
           </Link>
           <Link
             href=""
-            className="flex items-center gap-6 cursor-pointer hover:text-amber-600"
+            className="flex items-center gap-6 cursor-pointer hover:text-yellow-600"
           >
             <TbTargetArrow className="" />
             practice
           </Link>
           <Link
             href=""
-            className="flex items-center gap-6 cursor-pointer hover:text-amber-600"
+            className="flex items-center gap-6 cursor-pointer hover:text-yellow-600"
           >
             <PiFlagCheckeredDuotone className="" />
             leaderboard
           </Link>
           <Link
             href=""
-            className="flex items-center gap-6 cursor-pointer hover:text-amber-600"
+            className="flex items-center gap-6 cursor-pointer hover:text-yellow-600"
           >
             <LuHeartHandshake className="" />
             credits
