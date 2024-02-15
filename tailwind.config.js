@@ -35,10 +35,19 @@ module.exports = {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-5px)" },
         },
+        spin: {
+          from: {
+            transform: "rotate(0deg)",
+          },
+          to: {
+            transform: "rotate(360deg)",
+          },
+        },
       },
       animation: {
         blink: "blink 1s step-end infinite",
         wiggle: "wiggle 10s ease-in-out infinite",
+        "spin-slow": "spin 20s linear infinite",
       },
     },
   },
