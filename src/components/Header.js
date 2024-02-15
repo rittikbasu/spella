@@ -1,22 +1,22 @@
 import { useState } from "react";
+import Link from "next/link";
 import { GiBee } from "react-icons/gi";
 import { MdOutlineRestaurantMenu } from "react-icons/md";
-import { ImCross } from "react-icons/im";
 import { BsSpellcheck } from "react-icons/bs";
-import { FaFlagCheckered } from "react-icons/fa6";
+import { PiFlagCheckeredDuotone } from "react-icons/pi";
 import { TbTargetArrow } from "react-icons/tb";
+import { LuHeartHandshake } from "react-icons/lu";
+import { IoClose } from "react-icons/io5";
 
 const Header = () => {
   const [isModalOpen, setModalOpen] = useState(false);
-
-  const toggleModal = () => setModalOpen(!isModalOpen);
   return (
     <>
       <div className="w-full max-w-xl mb-4 flex justify-between items-center">
         <div className="flex items-center gap-1">
           <GradientIcon
             IconComponent={GiBee}
-            svgClassName="w-7 h-7 relative md:bottom-[1.1rem] bottom-[0.9rem] animate-wiggle"
+            svgClassName="w-7 h-7 relative md:bottom-[1.1rem] bottom-[0.9rem]"
             viewBox={"0 0 16 16"}
           />
           <div className="md:text-5xl text-4xl font-josefin font-bold ml-[-1rem]">
@@ -30,7 +30,7 @@ const Header = () => {
         </div>
         <button
           className="flex items-center gap-2 py-1 pl-4 pr-1 md:px-4 md:bg-gradient-to-t hover:shadow-lg hover:shadow-lime-200/70 bg-gradient-to-r md:border border-y border-l border-black/5 from-lime-100/50 via-lime-100/80 to-lime-50/50 md:rounded-xl rounded-l-xl outline-none"
-          onClick={toggleModal}
+          onClick={() => setModalOpen(true)}
         >
           <MdOutlineRestaurantMenu className="w-5 h-5 md:h-6 md:w-6" />
           <span className="md:text-2xl text-lg font-semibold tracking-wider mr-1">
@@ -38,7 +38,7 @@ const Header = () => {
           </span>
         </button>
       </div>
-      {isModalOpen && <MenuModal onClose={toggleModal} />}
+      {isModalOpen && <MenuModal setModalOpen={setModalOpen} />}
     </>
   );
 };
@@ -64,31 +64,50 @@ const GradientIcon = ({
   );
 };
 
-const MenuModal = ({ onClose }) => {
+const MenuModal = ({ setModalOpen }) => {
   return (
-    <div className="fixed inset-0 z-10 bg-black/30 backdrop-blur-lg flex justify-center items-center">
-      <div className=" bg-gradient-to-t from-lime-200/40 via-lime-200/30 to-lime-200/10 p-5 md:p-6 rounded-2xl w-4/5 max-w-72 flex justify-center">
+    <div className="fixed inset-0 z-10 bg-black/30 backdrop-blur-2xl flex justify-center items-center">
+      <div className="relative bg-white/30 py-12 md:py-14 rounded-3xl w-4/5 max-w-80 flex justify-center">
         <ul className="space-y-8 text-2xl md:text-3xl text-gray-800 tracking-wide font-light">
-          <li className="flex items-center gap-6 cursor-pointer hover:text-amber-600">
+          <Link
+            href="/daily"
+            className="flex items-center gap-6 cursor-pointer hover:text-amber-600"
+          >
             <BsSpellcheck className="" />
             daily
-          </li>
-          <li className="flex items-center gap-6 cursor-pointer hover:text-amber-600">
+          </Link>
+          <Link
+            href=""
+            className="flex items-center gap-6 cursor-pointer hover:text-amber-600"
+          >
             <TbTargetArrow className="" />
             practice
-          </li>
-          <li className="flex items-center gap-6 cursor-pointer hover:text-amber-600">
-            <FaFlagCheckered className="w-[1.4rem] h-[1.4rem] md:w-7 md:h-7" />
-            leaderboard
-          </li>
-          <button
-            onClick={onClose}
-            className="text-red-500 flex items-center gap-6 cursor-pointer hover:text-red-700"
+          </Link>
+          <Link
+            href=""
+            className="flex items-center gap-6 cursor-pointer hover:text-amber-600"
           >
-            <ImCross className="w-[1.1rem] h-[1.1rem] md:w-6 md:h-6" />
+            <PiFlagCheckeredDuotone className="" />
+            leaderboard
+          </Link>
+          <Link
+            href=""
+            className="flex items-center gap-6 cursor-pointer hover:text-amber-600"
+          >
+            <LuHeartHandshake className="" />
+            credits
+          </Link>
+        </ul>
+        <div className="absolute top-0 right-0 rounded-tr-3xl rounded-bl-3xl p-2 px-4 bg-black flex">
+          <button
+            type="button"
+            className="text-gray-300 flex items-center md:text-lg"
+            onClick={() => setModalOpen(false)}
+          >
+            <IoClose className="h-5 w-5 md:h-6 md:w-6 fill-gray-300 mr-2" />
             close
           </button>
-        </ul>
+        </div>
       </div>
     </div>
   );
