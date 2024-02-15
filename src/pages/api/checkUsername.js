@@ -1,10 +1,29 @@
 import { supabase } from "@/utils/supabaseClient";
 import { v4 as uuidv4 } from "uuid";
+import {
+  RegExpMatcher,
+  englishDataset,
+  englishRecommendedTransformers,
+} from "obscenity";
+import { isMessageDirty } from "profanity-hindi";
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
     const { username } = req.body;
     console.log(username);
+
+    // Profanity check
+    const matcher = new RegExpMatcher({
+      ...englishDataset.build(),
+      ...englishRecommendedTransformers,
+    });
+    const isProfaneEn = matcher.hasMatch(username);
+    const isProfaneHi = isMessageDirty(username);
+
+    if (isProfaneEn || isProfaneHi) {
+      return res.status(400).json({ message: "profane" });
+    }
+
     try {
       let { data, error } = await supabase
         .from("spellol_users")
