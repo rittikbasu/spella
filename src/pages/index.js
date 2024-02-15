@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import Header from "@/components/Header";
@@ -30,6 +30,14 @@ export default function Home() {
       setShowSignup(true);
     }
   };
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    const id = storedUser ? JSON.parse(storedUser)?.id : null;
+    if (router.query.signup === "true" && !id) {
+      setShowSignup(true);
+    }
+  }, [router.query]);
 
   return (
     <>

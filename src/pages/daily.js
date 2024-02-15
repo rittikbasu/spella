@@ -238,10 +238,10 @@ function Home({ words }) {
         setUserID(id);
         fetchAttemptedWords(id);
       } else {
-        router.push("/signup");
+        router.push("/?signup=true");
       }
     } else {
-      router.push("/signup");
+      router.push("/?signup=true");
     }
   }, []);
 
