@@ -1,6 +1,6 @@
 const Bee = () => {
   return (
-    <div className="relative flex flex-col items-center justify-center border-amber-200 md:bg-gradient-to-bl from-lime-50 to-lime-200 rounded-full mt-16 max-w-[30rem] min-w-[20rem] min-h-[20rem] mx-auto">
+    <div className="relative flex flex-col items-center justify-center border-amber-200 md:bg-gradient-to-bl from-lime-50 to-lime-200/80 rounded-full mt-16 max-w-[30rem] min-w-[20rem] min-h-[20rem] mx-auto">
       <div className="bee">
         <div className="bee-body">
           <div className="blink"></div>
@@ -11,7 +11,7 @@ const Bee = () => {
         </div>
       </div>
       <svg
-        className="absolute md:hidden top-0 left-0 w-full h-full animate-spin-slow"
+        className="absolute md:hidden bottom-12 left-0 w-full h-full animate-spin-slow"
         viewBox="0 0 100 100"
       >
         <path
