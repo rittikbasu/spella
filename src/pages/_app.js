@@ -1,4 +1,5 @@
 import "@/styles/globals.css";
+import "@/styles/bee.css";
 import { Josefin_Sans, Work_Sans } from "next/font/google";
 
 const josefinSans = Josefin_Sans({
