@@ -68,31 +68,31 @@ const MenuModal = ({ setModalOpen }) => {
   return (
     <div className="fixed inset-0 z-10 bg-black/30 backdrop-blur-2xl flex justify-center items-center">
       <div className="relative bg-white/30 py-12 md:py-14 rounded-3xl w-4/5 max-w-80 flex justify-center">
-        <ul className="space-y-8 text-2xl md:text-3xl text-gray-800 tracking-wide font-light">
+        <ul className="space-y-8 text-2xl md:text-3xl text-gray-800 tracking-wide">
           <Link
             href="/daily"
-            className="flex items-center gap-6 cursor-pointer hover:text-yellow-600"
+            className="flex items-center gap-6 cursor-pointer hover:text-blue-600"
           >
             <BsSpellcheck className="" />
             daily
           </Link>
           <Link
             href=""
-            className="flex items-center gap-6 cursor-pointer hover:text-yellow-600"
+            className="flex items-center gap-6 cursor-pointer hover:text-blue-600"
           >
             <TbTargetArrow className="" />
             practice
           </Link>
           <Link
             href=""
-            className="flex items-center gap-6 cursor-pointer hover:text-yellow-600"
+            className="flex items-center gap-6 cursor-pointer hover:text-blue-600"
           >
             <PiFlagCheckeredDuotone className="" />
             leaderboard
           </Link>
           <Link
             href=""
-            className="flex items-center gap-6 cursor-pointer hover:text-yellow-600"
+            className="flex items-center gap-6 cursor-pointer hover:text-blue-600"
           >
             <LuHeartHandshake className="" />
             credits
@@ -101,10 +101,10 @@ const MenuModal = ({ setModalOpen }) => {
         <div className="absolute top-0 right-0 rounded-tr-3xl rounded-bl-3xl p-2 px-4 bg-black flex">
           <button
             type="button"
-            className="text-gray-300 flex items-center md:text-lg"
+            className="text-gray-300 flex items-center md:text-lg group hover:text-red-500"
             onClick={() => setModalOpen(false)}
           >
-            <IoClose className="h-5 w-5 md:h-6 md:w-6 fill-gray-300 mr-2" />
+            <IoClose className="h-5 w-5 md:h-6 md:w-6 fill-gray-300 mr-2 group-hover:fill-red-500" />
             close
           </button>
         </div>
