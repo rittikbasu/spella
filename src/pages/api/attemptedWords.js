@@ -5,10 +5,12 @@ export default async function handler(req, res) {
 
   if (req.method === "GET" && userId) {
     try {
+      const today = new Date().toISOString().split("T")[0];
       const { data, error } = await supabase
         .from("spellol_users")
         .select("daily_inputs")
-        .eq("id", userId);
+        .eq("id", userId)
+        .eq("daily_date", today);
 
       if (error) throw error;
       console.log(data[0].daily_inputs);
