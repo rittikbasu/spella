@@ -10,9 +10,10 @@ import { toast, Toaster } from "sonner";
 import { IoMdCloseCircle } from "react-icons/io";
 import { ImCross } from "react-icons/im";
 import { FaPlay, FaCheck, FaPause, FaBug } from "react-icons/fa";
-import { FaArrowRightLong } from "react-icons/fa6";
+import { BsArrowRight } from "react-icons/bs";
 
 import Header from "@/components/Header";
+import RulesModal from "@/components/RulesModal";
 
 function Home({ words }) {
   // console.log("Words", words);
@@ -26,6 +27,7 @@ function Home({ words }) {
   const audioRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [feedback, setFeedback] = useState(null);
+  const [showRulesModal, setShowRulesModal] = useState(true);
   const [disableSubmit, setDisableSubmit] = useState(true);
   const [showResults, setShowResults] = useState(false);
   const [isTruncated, setIsTruncated] = useState(true);
@@ -162,6 +164,8 @@ function Home({ words }) {
         }))
       );
 
+      // setShowRulesModal(false);
+
       index = attemptedWords.length < words.length ? attemptedWords.length : 0;
       setCurrentWordIndex(index);
       setWord(words[index].word);
@@ -268,7 +272,10 @@ function Home({ words }) {
         )}
       >
         <Header />
-
+        <RulesModal
+          showRulesModal={showRulesModal}
+          setShowRulesModal={setShowRulesModal}
+        />
         {showResults ? (
           <div className="flex flex-col items-center md:justify-center md:h-full gap-y-8 md:gap-y-16 mt-8 md:mt-16">
             <h2 className="text-2xl font-bold md:mt-0 md:text-4xl">
@@ -431,7 +438,7 @@ function Home({ words }) {
                 onClick={handleSubmit}
                 disabled={disableSubmit}
                 className={clsx(
-                  "order-last md:order-first items-center transition-shadow duration-300 mx-auto outline-none shadow-lg text-white text-xl px-8 md:my-8 rounded-xl mt-4",
+                  "order-last md:order-first items-center transition hover:shadow-2xl active:scale-95 duration-300 mx-auto outline-none shadow-lg text-white text-xl px-8 md:my-8 rounded-xl mt-4",
                   feedback === "correct"
                     ? "bg-gradient-to-bl shadow-lime-200 from-lime-400 to-lime-500"
                     : feedback === "incorrect"
@@ -450,7 +457,7 @@ function Home({ words }) {
                   </div>
                 ) : (
                   <div className="flex items-center py-2">
-                    submit <FaArrowRightLong className="ml-2" />
+                    submit <BsArrowRight className="ml-2" />
                   </div>
                 )}
               </button>
