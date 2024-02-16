@@ -68,7 +68,7 @@ export default function Home() {
             <p className="text-2xl bg-clip-text text-transparent bg-gradient-to-b from-gray-900 to-gray-500">
               it&rsquo;s back & to win you
             </p>
-            <span className="font-bold text-4xl md:text-5xl bg-clip-text text-transparent bg-gradient-to-b from-amber-200 to-amber-500 mt-1 md:mt-4">
+            <span className="font-bold text-4xl md:text-5xl md:leading-normal bg-clip-text text-transparent bg-gradient-to-b from-amber-200 to-amber-500 mt-1 md:mt-4">
               gotta spell em&rsquo; all
             </span>
           </div>
