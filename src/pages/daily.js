@@ -473,9 +473,11 @@ export async function getStaticProps() {
   const SUPABASE_URL = process.env.SUPABASE_URL;
   const SUPABASE_API_KEY = process.env.SUPABASE_API_KEY;
   const supabase = createClient(SUPABASE_URL, SUPABASE_API_KEY);
+  const today = new Date().toISOString().split("T")[0];
   const { data, error } = await supabase
     .from("spellol_daily")
-    .select("id, word, openai_audio");
+    .select("id, word, openai_audio")
+    .eq("created_at", today);
 
   if (error) {
     console.error("Error fetching words from Supabase", error);
