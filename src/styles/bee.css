@@ -64,7 +64,7 @@
     box-sizing: border-box;
     border-style: hidden hidden hidden solid;
     transform: skewY(-20deg);
-    clip-path: ellipse(60% 100% at 0% 0%);
+    /* clip-path: ellipse(100% 100% at 10% 10%); */
   }
   .antenae:before {
     content: '';
@@ -79,8 +79,9 @@
     box-sizing: border-box;
     border-style: hidden solid hidden hidden;
     transform: skewY(40deg);
-    clip-path: ellipse(40% 70% at 80% 0%);
+    clip-path: ellipse(30% 100% at 80% 30%);
   }
+  
   .antenae:after {
     /*stinger*/
     transform: skewY(20deg);

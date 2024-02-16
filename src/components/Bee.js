@@ -1,16 +1,16 @@
 const Bee = () => {
   return (
-    <div className="relative flex flex-col items-center justify-center border-amber-200 md:bg-gradient-to-bl from-lime-50 to-lime-200/80 rounded-full mt-16 max-w-[30rem] min-w-[20rem] min-h-[20rem] mx-auto">
+    <div className="relative flex flex-col items-center justify-center bg-gradient-to-bl from-lime-50 to-lime-200/80 rounded-full mt-16 max-w-[30rem] min-w-[20rem] min-h-[20rem] mx-auto group transition duration-1000 hover:hue-rotate-180">
       <div className="bee">
         <div className="bee-body">
           <div className="blink"></div>
           <div className="mouth"></div>
           <div className="antenae"></div>
-          <div className="bee-left"></div>
-          <div className="bee-right"></div>
+          <div className="bee-left group-hover:bg-gray-200 transition duration-1000"></div>
+          <div className="bee-right group-hover:bg-gray-200 transition duration-1000"></div>
         </div>
       </div>
-      <svg
+      {/* <svg
         className="absolute md:hidden bottom-12 left-0 w-full h-full animate-spin-slow"
         viewBox="0 0 100 100"
       >
@@ -31,7 +31,7 @@ const Bee = () => {
             gotta spell em all • gotta spell em all •
           </textPath>
         </text>
-      </svg>
+      </svg> */}
     </div>
   );
 };
