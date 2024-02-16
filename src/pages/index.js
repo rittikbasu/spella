@@ -7,11 +7,26 @@ import { BsArrowRight } from "react-icons/bs";
 import Bee from "@/components/Bee";
 import SignupModal from "@/components/SignupModal";
 
+const PlayNowWrapper = ({ children, userExists, setShowSignup }) => {
+  const classes =
+    "bg-gradient-to-bl from-yellow-400 to-amber-500 shadow-lg text-white font-bold py-2 rounded-xl text-2xl mt-2 md:mt-8 px-8 hover:shadow-2xl active:scale-95 transition-all duration-300 outline-none";
+  return userExists ? (
+    <Link href="/daily" className={classes}>
+      {children}
+    </Link>
+  ) : (
+    <button className={classes} onClick={() => setShowSignup(true)}>
+      {children}
+    </button>
+  );
+};
+
 export default function Home() {
   const router = useRouter();
   const [showSignup, setShowSignup] = useState(false);
+  const [userExists, setUserExists] = useState(false);
 
-  const handlePlayNow = () => {
+  useEffect(() => {
     const storedUser = localStorage.getItem("user");
     const id = storedUser ? JSON.parse(storedUser)?.id : null;
 
@@ -21,21 +36,15 @@ export default function Home() {
         .then((data) => {
           console.log(data);
           if (data.userExists) {
-            router.push("/daily");
+            setUserExists(true);
           } else {
             setShowSignup(true);
           }
         });
     } else {
-      setShowSignup(true);
-    }
-  };
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    const id = storedUser ? JSON.parse(storedUser)?.id : null;
-    if (router.query.signup === "true" && !id) {
-      setShowSignup(true);
+      if (router.query.signup === "true") {
+        setShowSignup(true);
+      }
     }
   }, [router.query]);
 
@@ -63,15 +72,12 @@ export default function Home() {
               gotta spell em&rsquo; all
             </span>
           </div>
-          <button
-            className="bg-gradient-to-bl from-yellow-400 to-amber-500 shadow-lg text-white font-bold py-2 rounded-xl text-2xl mt-2 md:mt-8 px-8 hover:shadow-2xl active:scale-95 transition-all duration-300 outline-none"
-            onClick={handlePlayNow}
-          >
+          <PlayNowWrapper userExists={userExists} setShowSignup={setShowSignup}>
             <div className="flex items-center justify-center">
               play now
               <BsArrowRight className="ml-2" />
             </div>
-          </button>
+          </PlayNowWrapper>
         </main>
         <footer className="flex items-center justify-center text-gray-600 text-sm md:text-lg py-4">
           <Link
