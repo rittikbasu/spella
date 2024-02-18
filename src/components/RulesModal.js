@@ -59,7 +59,7 @@ const RulesModal = ({ showRulesModal, setShowRulesModal }) => {
           </div>
           <div className="flex items-center justify-center">
             <button
-              className="outline-none shadow-lg flex items-center text-white text-xl px-8 py-2 rounded-xl bg-gradient-to-bl from-yellow-400 to-amber-500 active:scale-95 transition-all duration-300"
+              className="outline-none flex items-center text-white text-xl px-8 py-2 rounded-xl bg-gradient-to-bl from-yellow-400 to-amber-500 active:scale-95 transition-all duration-300"
               onClick={() => setShowRulesModal(false)}
             >
               let&rsquo;s go <BsArrowRight className="ml-2" />
