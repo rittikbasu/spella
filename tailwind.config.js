@@ -27,7 +27,7 @@ module.exports = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       keyframes: {
-        blink: {
+        caret: {
           "0%, 100%": { borderColor: "transparent" },
           "50%": { borderColor: "#3b82f6" },
         },
@@ -45,7 +45,7 @@ module.exports = {
         },
       },
       animation: {
-        blink: "blink 1s step-end infinite",
+        caret: "caret 1s step-end infinite",
         wiggle: "wiggle 10s ease-in-out infinite",
         "spin-slow": "spin 20s linear infinite",
       },
