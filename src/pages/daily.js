@@ -57,6 +57,19 @@ function Home({ words }) {
     }
   };
 
+  async function updateLocalStorageInputs(input, correct, time) {
+    const existingInputs =
+      JSON.parse(localStorage.getItem("dailyInputs")) || [];
+
+    existingInputs.push({
+      input,
+      correct,
+      added_at: time,
+    });
+
+    localStorage.setItem("dailyInputs", JSON.stringify(existingInputs));
+  }
+
   const handleSubmit = async () => {
     if (input === "") return;
 
@@ -66,18 +79,18 @@ function Home({ words }) {
       audioRef.current.currentTime = 0;
       setIsPlaying(false);
     }
-
-    setInputLog((prevLog) => [...prevLog, { user: input, correct: word }]);
+    const time = new Date().toISOString();
+    setInputLog((prevLog) => [
+      ...prevLog,
+      { user: input, correct: word, added_at: time },
+    ]);
 
     if (input.toLowerCase() === word.toLowerCase()) {
       setFeedback("correct");
     } else {
       setFeedback("incorrect");
     }
-
-    if (userID) {
-      updateDailyInputs(userID, input, word);
-    }
+    updateLocalStorageInputs(input, word, time);
 
     const nextWordIndex = currentWordIndex + 1;
 
@@ -149,37 +162,45 @@ function Home({ words }) {
     }
   };
 
-  const fetchAttemptedWords = async (userId) => {
-    let index = 0;
-    try {
-      const response = await fetch(`/api/attemptedWords?userId=${userId}`);
-      const attemptedWords = await response.json();
+  async function fetchAttemptedWords(userId) {
+    const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
+    const dailyDate = localStorage.getItem("daily_date");
 
-      if (attemptedWords.length === 0) return;
+    if (dailyDate === today) {
+      let index = 0;
+      try {
+        // Retrieve attempted words from local storage
+        const attemptedWords =
+          JSON.parse(localStorage.getItem("dailyInputs")) || [];
+        setShowResults(attemptedWords.length === words.length);
+        setShowRulesModal(attemptedWords.length === 0);
 
-      setInputLog(
-        attemptedWords.map((word) => ({
-          user: word.input,
-          correct: word.correct,
-        }))
-      );
+        setInputLog(
+          attemptedWords.map(({ input, correct }) => ({
+            user: input,
+            correct,
+          }))
+        );
 
-      // setShowRulesModal(false);
-
-      index = attemptedWords.length < words.length ? attemptedWords.length : 0;
-      setCurrentWordIndex(index);
-      setWord(words[index].word);
-
-      if (attemptedWords.length >= words.length) {
-        setShowResults(true);
+        index =
+          attemptedWords.length < words.length ? attemptedWords.length : 0;
+        setCurrentWordIndex(index);
+        setWord(words[index]?.word);
+      } catch (error) {
+        console.error(
+          "Error fetching attempted words from local storage:",
+          error
+        );
+      } finally {
+        await setupAudio(index);
+        setDisableSubmit(false);
       }
-    } catch (error) {
-      console.error("Error fetching attempted words:", error);
-    } finally {
-      await setupAudio(index);
-      setDisableSubmit(false);
+    } else {
+      // If daily_date is not today, set it to today and clear previous attempts
+      localStorage.setItem("daily_date", today);
+      localStorage.removeItem("dailyInputs"); // Optional: Clear previous attempts
     }
-  };
+  }
 
   useEffect(() => {
     const handleKeyPress = (e) => {
@@ -234,19 +255,7 @@ function Home({ words }) {
   }, [reportedWords, isReportMode]);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      const { id } = JSON.parse(storedUser);
-
-      if (id) {
-        setUserID(id);
-        fetchAttemptedWords(id);
-      } else {
-        router.push("/?signup=true");
-      }
-    } else {
-      router.push("/?signup=true");
-    }
+    fetchAttemptedWords();
   }, []);
 
   const getColorClass = (index) => {
@@ -281,7 +290,7 @@ function Home({ words }) {
             <h2 className="text-2xl font-bold md:mt-0 md:text-4xl">
               your results
             </h2>
-            <div className="flex justify-center items-center space-x-4 bg-gray-100 shadow-lg border p-2 rounded-xl">
+            <div className="flex justify-center items-center space-x-8 bg-gray-50 border py-2 px-4 rounded-xl">
               <span className="flex items-center">
                 <span className="h-4 w-4 rounded-full bg-lime-400 inline-block mr-2"></span>
                 easy
@@ -314,7 +323,7 @@ function Home({ words }) {
                   </span>
                   <span
                     className={`text-lg flex-1 text-left ${
-                      entry.user.toLowerCase() === entry.correct.toLowerCase()
+                      entry.user?.toLowerCase() === entry.correct.toLowerCase()
                         ? "text-gray-800"
                         : "text-gray-800 underline decoration-wavy underline-offset-4 decoration-red-500"
                     }`}
@@ -328,7 +337,7 @@ function Home({ words }) {
                       className="w-4 h-4 rounded-full outline-none"
                       onChange={handleCheckboxChange}
                     />
-                  ) : entry.user.toLowerCase() ===
+                  ) : entry.user?.toLowerCase() ===
                     entry.correct.toLowerCase() ? (
                     <FaCheck className="text-lime-400" />
                   ) : (
@@ -337,7 +346,17 @@ function Home({ words }) {
                 </div>
               ))}
             </div>
-            <div className="flex flex-col justify-center items-center">
+            <button
+              className="bg-gradient-to-bl from-yellow-400 to-amber-500 transition hover:shadow-2xl active:scale-95 duration-300 text-white font-bold text-xl py-2 px-4 rounded-xl"
+              // onClick={() => router.push("/leaderboard")}
+            >
+              <div className="flex items-center justify-center">
+                see leaderboard
+                <BsArrowRight className="ml-2" />
+              </div>
+            </button>
+            {/* <div className=" border-b w-3/4 border-gray-300"></div> */}
+            <div className="flex flex-col justify-center items-center bg-gray-100 w-[96%] max-w-96 rounded-xl py-4 px-2">
               {isReportMode ? (
                 <p className="text-justify text-sm text-gray-600">
                   select the words you faced an issue with
@@ -349,7 +368,7 @@ function Home({ words }) {
               )}
               <button
                 className={clsx(
-                  "bg-gradient-to-t w-32 shadow-lg text-white font-bold rounded-lg mt-4 flex items-center justify-center py-2",
+                  "bg-gradient-to-t w-36 text-white font-bold rounded-xl mt-4 flex items-center justify-center transition active:scale-95 duration-300 py-2",
                   // isReportMode
                   //   ? "from-lime-500 to-lime-300"
                   //   :
@@ -394,11 +413,12 @@ function Home({ words }) {
                 {input === "" ? (
                   <span className="text-2xl md:text-4xl tracking-wider text-zinc-400">
                     let&rsquo;s get typing
-                    <span className="border-l-2 border-transparent animate-blink"></span>
+                    <span className="border-l-2 border-transparent animate-caret"></span>
                   </span>
                 ) : (
                   <span className="text-2xl md:text-4xl tracking-widest">
                     {input}
+                    <span className="border-l-2 border-transparent animate-caret"></span>
                   </span>
                 )}
               </div>
