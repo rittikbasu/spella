@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import clsx from "clsx";
+
 import { GiBee } from "react-icons/gi";
 import { MdOutlineRestaurantMenu } from "react-icons/md";
 import { BsSpellcheck } from "react-icons/bs";
@@ -65,9 +67,33 @@ const GradientIcon = ({
 };
 
 const MenuModal = ({ setModalOpen }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    setIsOpen(true);
+  }, []);
+
+  const handleClose = () => {
+    setIsOpen(false);
+    setTimeout(() => {
+      setModalOpen(false);
+    }, 500);
+  };
   return (
-    <div className="fixed inset-0 z-10 bg-black/30 backdrop-blur-2xl flex justify-center items-center">
-      <div className="relative bg-white/30 py-12 md:py-14 rounded-3xl w-4/5 max-w-80 flex justify-center">
+    <div
+      className={clsx(
+        "fixed inset-0 z-10 bg-black bg-opacity-30 flex justify-center items-center transition-opacity duration-700",
+        isOpen
+          ? "opacity-100 backdrop-blur-2xl"
+          : "opacity-0 backdrop-blur-sm pointer-events-none"
+      )}
+    >
+      <div
+        className={clsx(
+          "relative bg-white bg-opacity-30 py-12 md:py-14 rounded-3xl w-4/5 max-w-md flex justify-center transition-all duration-700 transform",
+          isOpen ? "scale-100" : "scale-50"
+        )}
+      >
         <ul className="space-y-8 text-2xl md:text-3xl text-gray-800 tracking-wide">
           <Link
             href="/daily"
@@ -102,7 +128,7 @@ const MenuModal = ({ setModalOpen }) => {
           <button
             type="button"
             className="text-gray-300 flex items-center md:text-lg group hover:text-red-500"
-            onClick={() => setModalOpen(false)}
+            onClick={() => handleClose()}
           >
             <IoClose className="h-5 w-5 md:h-6 md:w-6 fill-gray-300 mr-2 group-hover:fill-red-500" />
             close
