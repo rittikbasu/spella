@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import Head from "next/head";
-import { useRouter } from "next/router";
 import Keyboard from "react-simple-keyboard";
 import "react-simple-keyboard/build/css/index.css";
 import { createClient } from "@supabase/supabase-js";
+import { v4 as uuidv4 } from "uuid";
 import clsx from "clsx";
 import { toast, Toaster } from "sonner";
 
@@ -18,8 +18,6 @@ import RulesModal from "@/components/RulesModal";
 function Home({ words }) {
   // console.log("Words", words);
   let keyboard;
-  const router = useRouter();
-  const [userID, setUserID] = useState(null);
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [word, setWord] = useState(words[currentWordIndex]?.word);
   const [input, setInput] = useState("");
@@ -59,7 +57,7 @@ function Home({ words }) {
 
   async function updateLocalStorageInputs(input, correct, time) {
     const existingInputs =
-      JSON.parse(localStorage.getItem("dailyInputs")) || [];
+      JSON.parse(localStorage.getItem("daily_inputs")) || [];
 
     existingInputs.push({
       input,
@@ -67,12 +65,12 @@ function Home({ words }) {
       added_at: time,
     });
 
-    localStorage.setItem("dailyInputs", JSON.stringify(existingInputs));
+    localStorage.setItem("daily_inputs", JSON.stringify(existingInputs));
   }
 
   const handleSubmit = async () => {
     if (input === "") return;
-
+    console.log("input", inputLog);
     // Stop the current audio if it exists
     if (audioRef.current) {
       audioRef.current.pause();
@@ -118,6 +116,22 @@ function Home({ words }) {
       }, 500);
     } else {
       setShowResults(true);
+      let user_id = localStorage.getItem("user_id");
+      console.log("user_id", user_id);
+      if (!user_id) {
+        user_id = uuidv4();
+        localStorage.setItem("user_id", user_id);
+      }
+      const response = await fetch("/api/updateDailyInputs", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id,
+          inputLog,
+        }),
+      });
     }
     setTimeout(() => setFeedback(null), 2000);
   };
@@ -132,25 +146,25 @@ function Home({ words }) {
     }
   };
 
-  async function updateDailyInputs(userId, input, correct) {
-    const response = await fetch("/api/updateDailyInputs", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userId,
-        input,
-        correct,
-      }),
-    });
+  // async function updateDailyInputs(userId, input, correct) {
+  //   const response = await fetch("/api/updateDailyInputs", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       userId,
+  //       input,
+  //       correct,
+  //     }),
+  //   });
 
-    if (!response.ok) {
-      toast.error("error updating daily inputs");
-    }
+  //   if (!response.ok) {
+  //     toast.error("error updating daily inputs");
+  //   }
 
-    return response.json();
-  }
+  //   return response.json();
+  // }
 
   const setupAudio = async (wordIndex) => {
     const audioUrl = words[wordIndex]?.openai_audio;
@@ -162,7 +176,7 @@ function Home({ words }) {
     }
   };
 
-  async function fetchAttemptedWords(userId) {
+  async function fetchAttemptedWords() {
     const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
     const dailyDate = localStorage.getItem("daily_date");
 
@@ -171,14 +185,15 @@ function Home({ words }) {
       try {
         // Retrieve attempted words from local storage
         const attemptedWords =
-          JSON.parse(localStorage.getItem("dailyInputs")) || [];
+          JSON.parse(localStorage.getItem("daily_inputs")) || [];
         setShowResults(attemptedWords.length === words.length);
         setShowRulesModal(attemptedWords.length === 0);
 
         setInputLog(
-          attemptedWords.map(({ input, correct }) => ({
+          attemptedWords.map(({ input, correct, added_at }) => ({
             user: input,
             correct,
+            added_at,
           }))
         );
 
@@ -198,7 +213,7 @@ function Home({ words }) {
     } else {
       // If daily_date is not today, set it to today and clear previous attempts
       localStorage.setItem("daily_date", today);
-      localStorage.removeItem("dailyInputs"); // Optional: Clear previous attempts
+      localStorage.removeItem("daily_inputs"); // Optional: Clear previous attempts
     }
   }
 
@@ -355,7 +370,7 @@ function Home({ words }) {
                 <BsArrowRight className="ml-2" />
               </div>
             </button>
-            {/* <div className=" border-b w-3/4 border-gray-300"></div> */}
+
             <div className="flex flex-col justify-center items-center bg-gray-100 w-[96%] max-w-96 rounded-xl py-4 px-2">
               {isReportMode ? (
                 <p className="text-justify text-sm text-gray-600">
@@ -367,13 +382,7 @@ function Home({ words }) {
                 </p>
               )}
               <button
-                className={clsx(
-                  "bg-gradient-to-t w-36 text-white font-bold rounded-xl mt-4 flex items-center justify-center transition active:scale-95 duration-300 py-2",
-                  // isReportMode
-                  //   ? "from-lime-500 to-lime-300"
-                  //   :
-                  "from-red-800 to-red-500"
-                )}
+                className="bg-gradient-to-t w-36 text-white font-bold rounded-xl mt-4 flex items-center justify-center transition active:scale-95 duration-300 py-2 from-red-600 to-red-400"
                 onClick={() => setIsReportMode((prev) => !prev)}
               >
                 <FaBug className="mr-2" />{" "}
