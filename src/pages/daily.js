@@ -78,10 +78,10 @@ function Home({ words }) {
       setIsPlaying(false);
     }
     const time = new Date().toISOString();
-    setInputLog((prevLog) => [
-      ...prevLog,
+    const updatedInputLog = [
+      ...inputLog,
       { user: input, correct: word, added_at: time },
-    ]);
+    ];
 
     if (input.toLowerCase() === word.toLowerCase()) {
       setFeedback("correct");
@@ -129,10 +129,15 @@ function Home({ words }) {
         },
         body: JSON.stringify({
           user_id,
-          inputLog,
+          inputLog: updatedInputLog,
         }),
       });
+
+      if (!response.ok) {
+        toast.error("error updating results to database");
+      }
     }
+    setInputLog(updatedInputLog);
     setTimeout(() => setFeedback(null), 2000);
   };
 
@@ -146,26 +151,6 @@ function Home({ words }) {
     }
   };
 
-  // async function updateDailyInputs(userId, input, correct) {
-  //   const response = await fetch("/api/updateDailyInputs", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       userId,
-  //       input,
-  //       correct,
-  //     }),
-  //   });
-
-  //   if (!response.ok) {
-  //     toast.error("error updating daily inputs");
-  //   }
-
-  //   return response.json();
-  // }
-
   const setupAudio = async (wordIndex) => {
     const audioUrl = words[wordIndex]?.openai_audio;
     if (audioUrl) {
@@ -177,13 +162,12 @@ function Home({ words }) {
   };
 
   async function fetchAttemptedWords() {
-    const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
+    const today = new Date().toISOString().split("T")[0];
     const dailyDate = localStorage.getItem("daily_date");
 
     if (dailyDate === today) {
       let index = 0;
       try {
-        // Retrieve attempted words from local storage
         const attemptedWords =
           JSON.parse(localStorage.getItem("daily_inputs")) || [];
         setShowResults(attemptedWords.length === words.length);
@@ -202,10 +186,8 @@ function Home({ words }) {
         setCurrentWordIndex(index);
         setWord(words[index]?.word);
       } catch (error) {
-        console.error(
-          "Error fetching attempted words from local storage:",
-          error
-        );
+        console.error("error fetching attempted words from local storage:");
+        localStorage.removeItem("daily_inputs");
       } finally {
         await setupAudio(index);
         setDisableSubmit(false);
@@ -498,7 +480,7 @@ function Home({ words }) {
   );
 }
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   const SUPABASE_URL = process.env.SUPABASE_URL;
   const SUPABASE_API_KEY = process.env.SUPABASE_API_KEY;
   const supabase = createClient(SUPABASE_URL, SUPABASE_API_KEY);
@@ -517,7 +499,6 @@ export async function getStaticProps() {
     props: {
       words: data,
     },
-    revalidate: 1,
   };
 }
 
