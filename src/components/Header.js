@@ -77,7 +77,7 @@ const MenuModal = ({ setModalOpen }) => {
     setIsOpen(false);
     setTimeout(() => {
       setModalOpen(false);
-    }, 500);
+    }, 200);
   };
   return (
     <div
@@ -90,7 +90,7 @@ const MenuModal = ({ setModalOpen }) => {
     >
       <div
         className={clsx(
-          "relative bg-white bg-opacity-30 py-12 md:py-14 rounded-3xl w-4/5 max-w-md flex justify-center transition-all duration-700 transform",
+          "relative bg-white bg-opacity-30 py-12 md:py-14 rounded-3xl w-4/5 max-w-md flex justify-center transition-all duration-500 transform",
           isOpen ? "scale-100" : "scale-50"
         )}
       >
