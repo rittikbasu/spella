@@ -15,7 +15,7 @@ export default async function handler(req, res) {
       // Check if user exists
       let { data: userExists, error: userExistsError } = await supabase
         .from("spellol_users")
-        .select("id")
+        .select("id, daily_inputs")
         .eq("id", user_id)
         .single();
 
@@ -37,6 +37,11 @@ export default async function handler(req, res) {
         if (insertUserError) {
           throw insertUserError;
         }
+      }
+      if (userExists.daily_inputs.length === 10) {
+        return res
+          .status(200)
+          .json({ message: "user has already attempted daily challenge" });
       } else {
         const { data, error: insertUserError } = await supabase
           .from("spellol_users")
@@ -53,7 +58,6 @@ export default async function handler(req, res) {
       res.status(500).json({ error: error.message });
     }
   } else {
-    // Handle any non-POST requests
     res.setHeader("Allow", ["POST"]);
     res.status(405).end(`Method ${req.method} Not Allowed`);
   }
