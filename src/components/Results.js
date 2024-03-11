@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { FaCheck, FaBug } from "react-icons/fa";
 import { ImCross } from "react-icons/im";
 import { BsArrowRight } from "react-icons/bs";
@@ -112,15 +113,15 @@ const Results = ({ inputLog }) => {
           </div>
         ))}
       </div>
-      <button
+      <Link
+        href="/leaderboard"
         className="bg-gradient-to-bl from-yellow-400 to-amber-500 transition hover:shadow-2xl active:scale-95 duration-300 text-white font-bold text-xl py-2 px-4 rounded-xl"
-        // onClick={() => router.push("/leaderboard")}
       >
         <div className="flex items-center justify-center">
           see leaderboard
           <BsArrowRight className="ml-2" />
         </div>
-      </button>
+      </Link>
 
       <div className="flex flex-col justify-center items-center bg-gray-100 w-[96%] max-w-96 rounded-xl py-4 px-2">
         {isReportMode ? (
