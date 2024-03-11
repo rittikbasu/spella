@@ -1,9 +1,11 @@
 import Head from "next/head";
+import clsx from "clsx";
 
 import Header from "@/components/Header";
 import { supabase } from "@/utils/supabaseClient";
 
 export default function Leaderboard({ leaderboardData }) {
+  const username = "the-creator";
   return (
     <>
       <Head>
@@ -18,56 +20,44 @@ export default function Leaderboard({ leaderboardData }) {
         <h1 className="text-2xl md:text-4xl font-bold text-center my-4">
           leaderboard
         </h1>
-        <div className="w-full rounded-2xl">
+        <div className="w-full">
           <table className="table-auto w-full">
             <thead>
-              <tr>
-                <th className="text-center font-semibold px-4 py-4 bg-gray-200/40 rounded-tl-2xl">
+              <tr className="bg-gray-200/70">
+                <th className="text-center font-semibold px-4 py-4 rounded-l-2xl">
                   #
                 </th>
-                <th className="text-center font-semibold px-4 py-4 bg-amber-200/40">
+                <th className="text-center font-semibold px-4 py-4">
                   username
                 </th>
-                <th className="text-center font-semibold px-4 py-4 bg-black/50 text-gray-200 rounded-tr-2xl">
+                <th className="text-center font-semibold px-4 py-4 rounded-r-2xl">
                   correct words
                 </th>
               </tr>
             </thead>
             <tbody>
               {leaderboardData.map((user, index) => (
-                <tr key={index} className="text-center">
+                <tr
+                  key={index}
+                  className={clsx(
+                    "text-center",
+                    user.username === username && "bg-lime-200 font-semibold"
+                  )}
+                >
                   <td
-                    className={`px-4 py-4 ${
-                      user.username === "xanthine-void"
-                        ? "bg-lime-200 font-semibold text-black"
-                        : "bg-gray-200/40"
-                    } ${
-                      index === leaderboardData.length - 1
-                        ? "rounded-bl-2xl"
-                        : ""
-                    }`}
+                    className={clsx(
+                      "px-4 py-4",
+                      user.username === username && "rounded-l-2xl"
+                    )}
                   >
                     {index + 1}
                   </td>
+                  <td className="px-4 py-4">{user.username}</td>
                   <td
-                    className={`px-4 py-4 ${
-                      user.username === "xanthine-void"
-                        ? "bg-lime-200 font-semibold text-black"
-                        : "bg-amber-200/50"
-                    }`}
-                  >
-                    {user.username}
-                  </td>
-                  <td
-                    className={`px-4 py-4 ${
-                      user.username === "xanthine-void"
-                        ? "bg-lime-200 font-semibold text-black"
-                        : "text-gray-200 bg-black/50"
-                    } ${
-                      index === leaderboardData.length - 1
-                        ? "rounded-br-2xl"
-                        : ""
-                    }`}
+                    className={clsx(
+                      "px-4 py-4",
+                      user.username === username && "rounded-r-2xl"
+                    )}
                   >
                     {user.correctWordsCount} / 10
                   </td>
@@ -88,14 +78,33 @@ export async function getServerSideProps() {
     .select("id, username, daily_inputs")
     .not("daily_inputs", "is", null);
   // .eq("daily_date", today)
+
   const leaderboardData = data.map((user) => {
-    const correctWordsCount = user.daily_inputs.filter(
-      (input) => input.correct
+    const sortedInputs = user.daily_inputs.sort(
+      (a, b) => new Date(a.added_at) - new Date(b.added_at)
+    );
+
+    const correctWordsCount = sortedInputs.filter(
+      (input) => input.correct === input.user
     ).length;
-    return { ...user, correctWordsCount };
+
+    let timeTaken = 1000000;
+    if (sortedInputs.length >= 2) {
+      const startTime = new Date(sortedInputs[0].added_at);
+      const endTime = new Date(sortedInputs[sortedInputs.length - 1].added_at);
+      timeTaken = endTime - startTime;
+      //   console.log(timeTaken, "timeTaken", user.username, "username");
+    }
+
+    return { ...user, correctWordsCount, timeTaken };
   });
 
-  leaderboardData.sort((a, b) => b.correctWordsCount - a.correctWordsCount);
+  leaderboardData.sort((a, b) => {
+    if (a.correctWordsCount === b.correctWordsCount) {
+      return a.timeTaken - b.timeTaken;
+    }
+    return b.correctWordsCount - a.correctWordsCount;
+  });
 
   return {
     props: {
