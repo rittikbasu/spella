@@ -19,7 +19,7 @@ const RulesModal = ({ showRulesModal, setShowRulesModal }) => {
                     <FaPlayCircle className="w-7 h-7 mx-auto" />
                   </td>
                   <td className="py-2 align-middle px-2">
-                    play the audio to hear the word & its description
+                    play the audio to hear the word & its definition
                   </td>
                 </tr>
                 <tr>
